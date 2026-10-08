@@ -53,7 +53,7 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
           shrinkWrap: true,
           children: [
             DropdownButtonFormField<String>(
-              value: _selecionarUnidade,
+              initialValue: _selecionarUnidade,
               dropdownColor: tema.corDefundo,
               onChanged: (String? novoValor) {
                 setState(() {
@@ -85,7 +85,7 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
             Visibility(
                 visible: _mostrarQualidade,
                 child: DropdownButtonFormField(
-                  value: _selecionarQualidade,
+                  initialValue: _selecionarQualidade,
                   dropdownColor: tema.corDefundo,
                   onChanged: (String? novoValor) {
                     setState(() {

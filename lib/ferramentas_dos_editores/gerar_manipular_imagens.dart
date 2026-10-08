@@ -104,7 +104,7 @@ class ImagensLayoutEditor {
     _travarProporcao = false;
   }
 
-  mudarCorDeFundo(List espacosDeImagens, Color cor) async{
+  Future<void> mudarCorDeFundo(List espacosDeImagens, Color cor) async{
     List atual = [];
     img.Image copia = _imagemLayout!.clone();
 
@@ -128,7 +128,7 @@ class ImagensLayoutEditor {
   }
 
 
-  desenharLayoutPorPosicoes(List espacosDeImagens)async{
+  Future<void> desenharLayoutPorPosicoes(List espacosDeImagens)async{
     if(espacosDeImagens.isNotEmpty){
       List atual = [];
 
@@ -222,7 +222,7 @@ class ImagensLayoutEditor {
     }
   }
 
-  _colarImagemCarregadaNoLayout()async{
+  Future<void> _colarImagemCarregadaNoLayout()async{
     if(_imagemAberta != null){
       int xpos = _posX0!; //posicoes referentes a foto sendo gerada
       int ypos = _posY0!;

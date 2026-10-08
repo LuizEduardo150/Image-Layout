@@ -12,8 +12,6 @@ import 'package:image_layout/telas/subtelas/alerta_confirmar_desicao.dart';
 import 'package:image_layout/tema_cores.dart';
 
 
-BuildContext? contextG;
-
 class EditorImagemArgs{
   final int alturaDocumento;
   final int larguraDocumento;
@@ -22,19 +20,18 @@ class EditorImagemArgs{
   EditorImagemArgs(this.alturaDocumento, this.larguraDocumento, this.listaComPosicoesParaFotos);
 }
 
+
 class EditorDeImagem extends StatefulWidget {
 
-  EditorDeImagem({super.key, required context}){
-    contextG = context;
-  }
+  const EditorDeImagem({super.key});
 
   @override
   State<EditorDeImagem> createState() => _EditorDeImagemState();
 }
 
-
 class _EditorDeImagemState extends State<EditorDeImagem> {
-  final argumentos = ModalRoute.of(contextG!)!.settings.arguments as EditorImagemArgs;
+
+  EditorImagemArgs? argumentos;
   ImagensLayoutEditor? _documento;
   Uint8List? imagemView;
   Color _corBotoesAdd = Colors.white;
@@ -43,20 +40,26 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
   Color corSelecionada = Colors.white;
   bool load = true;
 
+
   void carregar() async{
+    
     await Future.delayed(const Duration(milliseconds: 500));
     _documento = ImagensLayoutEditor(
-        altura: argumentos.alturaDocumento,
-        largura: argumentos.larguraDocumento,
-        qtdFotos: argumentos.listaComPosicoesParaFotos.length
+        altura: argumentos!.alturaDocumento,
+        largura: argumentos!.larguraDocumento,
+        qtdFotos: argumentos!.listaComPosicoesParaFotos.length
     );
-    await _documento!.desenharLayoutPorPosicoes(argumentos.listaComPosicoesParaFotos);
+    
+    await _documento!.desenharLayoutPorPosicoes(argumentos!.listaComPosicoesParaFotos);
+    
     setState(() {});
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         load = false;
       });
     });
+    
     imagemView = _documento!.getImagemView();
   }
 
@@ -64,8 +67,20 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
   void initState() {
     requestPermission();
     super.initState();
-    carregar();
   }
+
+  @override
+  void didChangeDependencies() {
+
+    super.didChangeDependencies();
+
+    if (argumentos == null){
+      argumentos = ModalRoute.of(super.context)!.settings.arguments as EditorImagemArgs;
+      carregar();
+    }
+  
+  }
+
 
   void requestPermission() async{
     var status = await Permission.storage.status;
@@ -371,7 +386,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
   }
 
-  mudarCorDeFundo(TemaAplicacao tema)async{
+  void mudarCorDeFundo(TemaAplicacao tema)async{
     tituloSeletorCor = 'Mudar cor de fundo:';
     corSelecionada = _documento!.getCorDeFundo();
     Color cor = await colorPicker(tema);
@@ -382,7 +397,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
       });
       corSelecionada = cor;
       _documento!.setCorDeFundo(corSelecionada);
-      await _documento!.mudarCorDeFundo(argumentos.listaComPosicoesParaFotos, corSelecionada);
+      await _documento!.mudarCorDeFundo(argumentos!.listaComPosicoesParaFotos, corSelecionada);
       imagemView = _documento!.getImagemView();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
@@ -404,8 +419,8 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
     }
   }
 
-  Future<Color> colorPicker(TemaAplicacao tema)async{
-    final Color newColor = await showColorPickerDialog(
+  Future<Color> colorPicker(TemaAplicacao tema) async{
+    final Color newColor = await showColorPickerDialog( // TODO dando erro aqui
       context,
       corSelecionada,
       title: Text(tituloSeletorCor,
@@ -441,7 +456,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
       setState(() {
         load = true;
       });
-      bool ret = await _documento!.addImagemGaleria(argumentos.listaComPosicoesParaFotos[_documento!.getIndice()], tema);
+      bool ret = await _documento!.addImagemGaleria(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], tema);
 
       if(ret == true){
         setState(() {
@@ -474,7 +489,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
           });
           await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
           setState(() {
-            _documento!.preencherEspacoAtualComCor(argumentos.listaComPosicoesParaFotos[_documento!.getIndice()], _documento!.getCorDeFundo());
+            _documento!.preencherEspacoAtualComCor(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], _documento!.getCorDeFundo());
             imagemView = _documento!.getImagemView();
             load = false;
           });
@@ -495,7 +510,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
             await Future.delayed(const Duration(milliseconds: 200)); //tempo para fechar tela e abrir loading
             corSelecionada = cor;
             setState(() {
-              _documento!.preencherEspacoAtualComCor(argumentos.listaComPosicoesParaFotos[_documento!.getIndice()], cor);
+              _documento!.preencherEspacoAtualComCor(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], cor);
               imagemView = _documento!.getImagemView();
               load = false;
             });
@@ -548,7 +563,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
               load = true;
             });
             await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
-            _documento!.clearAllRedesenhar(argumentos.listaComPosicoesParaFotos);
+            _documento!.clearAllRedesenhar(argumentos!.listaComPosicoesParaFotos);
             imagemView = _documento!.getImagemView();
             setState(() {
               load = false;
@@ -568,11 +583,11 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
       });
       await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
       if(_documento!.possuiEspaco()){//caso o indice for para proxima posicao
-        _documento!.desfazerUmaAcao(argumentos.listaComPosicoesParaFotos[_documento!.getIndice()-1]);
+        _documento!.desfazerUmaAcao(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()-1]);
         imagemView = _documento!.getImagemView();
       }
       else {//indice ja aponta para ultima posicao pois tinha acabado o espaco
-        _documento!.desfazerUmaAcao(argumentos.listaComPosicoesParaFotos[_documento!.getIndice()]);
+        _documento!.desfazerUmaAcao(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()]);
         _corBotoesAdd = Colors.white;
         imagemView = _documento!.getImagemView();
       }

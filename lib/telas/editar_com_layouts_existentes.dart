@@ -177,7 +177,7 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
                   Text("Não há layouts salvos aqui por enquanto.", style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.width*0.1),),
                   TextButton(
                       child: Text("Criar um layout?", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.09, decoration: TextDecoration.underline)),
-                      onPressed: ()=> Navigator.pushNamed(context, '/criarNovoLayout')
+                      onPressed: () => Navigator.pushNamed(context, '/criarNovoLayout')
                   )
                 ],
               )

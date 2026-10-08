@@ -15,8 +15,6 @@ import "package:image_layout/telas/subtelas/salvar_layout.dart";
 import 'package:image_layout/tema_cores.dart';
 
 
-BuildContext? contextG;
-
 class EditorLayoutArgs{
   final int altura;
   final int largura;
@@ -29,17 +27,16 @@ class EditorLayoutArgs{
 
 
 class EditorLayouts extends StatefulWidget {
-  EditorLayouts({super.key, required context}){
-    contextG = context;
-  }
-
+  
+  const EditorLayouts({super.key});
+  
   @override
   State<EditorLayouts> createState() => _EditorLayouts();
 }
 
 ///Desenvolvimento tela editor de layouts --------------------------------------
 class _EditorLayouts extends State<EditorLayouts>{
-  final argumentos = ModalRoute.of(contextG!)!.settings.arguments as EditorLayoutArgs;
+  EditorLayoutArgs? argumentos;
   final _controlerAltura = TextEditingController();
   final _controlerLargura = TextEditingController();
   final _controlerEsphorizontal = TextEditingController();
@@ -60,30 +57,46 @@ class _EditorLayouts extends State<EditorLayouts>{
   }
 
   void exibirTelaErro(String textoErro){
-    showDialog(context: context, builder: (context){
-      return AlertaErroDialogBox(
-        texto: textoErro,
-      );
-    },);
+    print(">> função de erro disparada");
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertaErroDialogBox(
+          texto: textoErro,
+        );
+    });
+    print(">> Fim da tela de erro ??");
   }
 
-  carregar() async{
+  void carregar() async{
+    
     await Future.delayed(const Duration(milliseconds: 500)); //tempo para troca de tela
-    _documento = LayoutMaker(argumentos.unidade, argumentos.altura, argumentos.largura, argumentos.borda, argumentos.qualidade);
+    
+    _documento = LayoutMaker(argumentos!.unidade, argumentos!.altura, argumentos!.largura, argumentos!.borda, argumentos!.qualidade);
+    
     setState(() {});
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       load = false;
       setState(() {});
     });
+    
     imagemView = _documento!.getImagemView();
     setInfoDoc();
   }
 
   @override
-  void initState() {
-    super.initState();
-    carregar();
+  void didChangeDependencies() {
+    
+    super.didChangeDependencies();
+
+    if (argumentos == null){
+      argumentos = ModalRoute.of(super.context)!.settings.arguments as EditorLayoutArgs;
+      carregar();
+    }
+    
   }
+  
 
   @override
   Widget build(BuildContext context){
@@ -248,7 +261,7 @@ class _EditorLayouts extends State<EditorLayouts>{
     }
   }
 
-  _adicionarAreaParaFoto() async{
+  Future<void> _adicionarAreaParaFoto() async{
     subtelaAtivada = true;
     int? altura;
     int? largura;
@@ -460,7 +473,7 @@ class _EditorLayouts extends State<EditorLayouts>{
   }
 
   ///Tela para salvar layout
-  menuSalvar() async{
+  Future<void> menuSalvar() async{
     Future<bool> verificarSalvar()async{
       bool salvou = false;
       if(_controlerNomeLayout.text.trim().isEmpty){

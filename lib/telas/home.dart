@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: tema.corDefundo,
       appBar: AppBar(
-        title: const Text("Img Layout"),
+        title: const Text("Image Layout"),
         foregroundColor: Colors.white,
         backgroundColor: tema.corBotoes,
       ),

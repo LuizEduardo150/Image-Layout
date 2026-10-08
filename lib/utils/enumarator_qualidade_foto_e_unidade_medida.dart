@@ -10,8 +10,9 @@ extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
         return 'cm';
       case UnidadeDeMedida.pixels:
         return 'px';
-      default:
-        return '';
+      // TODO Remover dps
+      //default:
+        //return '';
     }
   }
 
@@ -22,8 +23,9 @@ extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
         return 'Centímetros';
       case UnidadeDeMedida.pixels:
         return 'Pixels';
-      default:
-        return '';
+      // TODO Remover dps
+      //default:
+        //return '';
     }
   }
 
@@ -48,8 +50,6 @@ extension QualidadeExtensions on Qualidade {
         return 200;
       case Qualidade.muitoBaixa:
         return 100;
-      default:
-        return 0;
     }
   }
 
@@ -63,8 +63,6 @@ extension QualidadeExtensions on Qualidade {
         return 60;
       case Qualidade.muitoBaixa:
         return 40;
-      default:
-        return 0;
     }
   }
 

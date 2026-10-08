@@ -51,7 +51,7 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
     inicializar();
   }
 
-  inicializar() async{
+  Future<void> inicializar() async{
     await persistence!.carregarChaves();
     List alturaLargura;
     List cordenadas;
@@ -196,7 +196,7 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
     );
   }
 
-  mudarNome(int index) async{
+  Future<void> mudarNome(int index) async{
     bool mudou = false;
     if(selectedItems.isEmpty){
       await exibirTelaMudarNomeLayoutSalvo(
@@ -223,7 +223,7 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
     }
   }
 
-  deletarSelecionado()async{
+  Future<void> deletarSelecionado()async{
     bool deveDeletar = false;
     if(selectedItems.isNotEmpty){
       String texto;

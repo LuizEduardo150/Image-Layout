@@ -279,18 +279,17 @@ class LayoutMaker{
 
   Future<String> criarEspacoDeImagem(int altura, int largura)async{ //casos de erro são entregues na hora
 
-    ///casos de entradas inválidas
+    // __ Tratamento de entradas
     if(largura > _larguraDocumento! - _borda*2 || altura > _alturaDocumento! - _borda*2) {
       return "As dimenções informadas são maiores que a própria área editável do documento";
     }
-    if(altura > _restanteY) {
+    else if(altura > _restanteY) {
       return "não há espaco suficiente de altura para a medida informada";
     }
-    if(largura > _restanteX) {
+    else if(largura > _restanteX) {
       return "não há espaco suficiente de largura para essa medida";
     }
-    if(altura <= 0 || largura <= 0){return 'ok';} //não executa nada, mas tambem nao gera erro
-
+    else if(altura <= 0 || largura <= 0){return 'ok';} //não executa nada, mas tambem nao gera erro
 
     /// _______execucao do metodo...
     if(_alturaLinhaAtual == 0){ //troca de linha ou inicio, setar valores de controle

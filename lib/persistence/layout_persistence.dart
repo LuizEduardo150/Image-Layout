@@ -6,7 +6,7 @@ class LayoutPersistence{
   String? nome;
   List chaves = [];
 
-  carregarChaves()async{
+  Future<void> carregarChaves()async{
     chaves = await getTodasAsChaves();
     chaves.removeWhere((element) =>
       (element.length > 7 && (element.split('-')[0] == 'tamanho' )) ||
@@ -15,7 +15,7 @@ class LayoutPersistence{
     );
   }
 
-  removerTudo() async{
+  Future<void> removerTudo() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
@@ -35,14 +35,14 @@ class LayoutPersistence{
     }
   }
 
-  saveCoordenadasImg(List posicoes) async{
+  Future<void> saveCoordenadasImg(List posicoes) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if(nome != null || nome != ''){
       await prefs.setString(nome!, jsonEncode(posicoes));
     }
   }
 
-  saveTamanhoDocumento(int altura, int largura) async{
+  Future<void> saveTamanhoDocumento(int altura, int largura) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? chave;
     if(nome != null){
@@ -51,7 +51,7 @@ class LayoutPersistence{
     }
   }
 
-  saveThumbnailLayout({required String stringNumerosUint8List}) async{
+  Future<void> saveThumbnailLayout({required String stringNumerosUint8List}) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('THUMB-${nome!}', stringNumerosUint8List);
   }
@@ -85,7 +85,7 @@ class LayoutPersistence{
     return prefs.getKeys().toList();
   }
 
-  deletarPorChave(String chave) async{
+  Future<void> deletarPorChave(String chave) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(chave);
     await prefs.remove('tamanho-$chave');

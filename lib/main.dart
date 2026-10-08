@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget{
     return ChangeNotifierProvider(
         create: (_) => TemaAplicacao(),
         child: MaterialApp(
-          title: "Img Layout",
+          title: "Image Layout",
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget{
             '/editarComlayoutsExistentes': (context) => const NovoLayoutPredefinido(),
             '/gerenciarLayouts': (context) => const GerenciarLayouts(),
             '/configuracaoTema': (context) => const ConfiguracoesTema(),
-            '/editorImagens': (context) => EditorDeImagem(context: context),
-            '/editorLayouts': (context) => EditorLayouts(context: context)
+            '/editorImagens': (context) => const EditorDeImagem(),
+            '/editorLayouts': (context) => const EditorLayouts()
           }
         )
     );

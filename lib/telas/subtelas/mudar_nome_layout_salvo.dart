@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:image_layout/tema_cores.dart';
 
-exibirTelaMudarNomeLayoutSalvo({required TextEditingController controlerNomeLayout, required context, required VoidCallback funcaoConfirmar}) async{
+Future<void> exibirTelaMudarNomeLayoutSalvo({required TextEditingController controlerNomeLayout, required context, required VoidCallback funcaoConfirmar}) async{
   await showDialog(context: context, builder: (context){
     return _NomeLayout(
       controlerNomeLayout: controlerNomeLayout,
