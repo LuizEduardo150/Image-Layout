@@ -2,8 +2,8 @@ import 'dart:typed_data';  //para usar o unit8list para visualização
 import "package:image/image.dart" as img;
 
 import "package:image_layout/persistence/layout_persistence.dart";
-import "package:image_layout/utils/enumarator_qualidade_foto_e_unidade_medida.dart";
-import "package:image_layout/utils/funcoes_cast.dart";
+import "package:image_layout/utils/enum_app_values.dart";
+import "package:image_layout/utils/utils.dart";
 
 
 class LayoutMaker{

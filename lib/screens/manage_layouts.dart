@@ -2,13 +2,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/application_theme_pers.dart';
 import 'package:image_layout/persistence/layout_persistence.dart';
-import 'package:image_layout/utils/funcoes_cast.dart';
-import 'package:image_layout/telas/subtelas/alerta_confirmar_desicao.dart';
-import 'package:image_layout/telas/subtelas/mudar_nome_layout_salvo.dart';
-import 'package:image_layout/telas/subtelas/alerta_erro.dart';
-import 'package:image_layout/telas/criar_novo_layout.dart';
+import 'package:image_layout/utils/utils.dart';
+import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
+import 'package:image_layout/screens/sub_screen/change_saved_layout_name.dart';
+import 'package:image_layout/screens/sub_screen/alerta_erro.dart';
+import 'package:image_layout/screens/criate_new_layout.dart';
 
 
 class GerenciarLayouts extends StatefulWidget {

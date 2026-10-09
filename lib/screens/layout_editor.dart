@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:typed_data';  //para usar o unit8list para visualização
 
-import "package:image_layout/ferramentas_dos_editores/gerar_manipular_layouts.dart";
-import "package:image_layout/telas/editor_imagens.dart";
-import 'package:image_layout/utils/funcoes_cast.dart';
-import 'package:image_layout/utils/enumarator_qualidade_foto_e_unidade_medida.dart';
-import "package:image_layout/telas/subtelas/adicionar_espaco_imagem.dart";
-import "package:image_layout/telas/subtelas/alerta_erro.dart";
-import "package:image_layout/telas/subtelas/adicionar_espacamento.dart";
-import "package:image_layout/telas/subtelas/alerta_confirmar_desicao.dart";
-import "package:image_layout/telas/menu_editor_layout.dart";
-import "package:image_layout/telas/subtelas/salvar_layout.dart";
-import 'package:image_layout/tema_cores.dart';
+import "package:image_layout/editors_tools/layout_editor_src_tools.dart";
+import "package:image_layout/screens/photo_editor.dart";
+import 'package:image_layout/utils/utils.dart';
+import 'package:image_layout/utils/enum_app_values.dart';
+import "package:image_layout/screens/sub_screen/add_place_for_image.dart";
+import "package:image_layout/screens/sub_screen/alerta_erro.dart";
+import "package:image_layout/screens/sub_screen/add_space_btwn_images.dart";
+import "package:image_layout/screens/sub_screen/confirm_decision_alert.dart";
+import "package:image_layout/screens/layout_editor_manual.dart";
+import "package:image_layout/screens/sub_screen/save_layout.dart";
+import 'package:image_layout/application_theme_pers.dart';
 
 
 class EditorLayoutArgs{
@@ -57,15 +57,13 @@ class _EditorLayouts extends State<EditorLayouts>{
   }
 
   void exibirTelaErro(String textoErro){
-    print(">> função de erro disparada");
     showDialog(
-      context: context, 
+      context: context,
       builder: (context) {
         return AlertaErroDialogBox(
           texto: textoErro,
         );
     });
-    print(">> Fim da tela de erro ??");
   }
 
   void carregar() async{

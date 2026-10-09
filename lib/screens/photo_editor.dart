@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'dart:typed_data';
 
-import 'package:image_layout/utils/enumarator_qualidade_foto_e_unidade_medida.dart';
-import 'package:image_layout/ferramentas_dos_editores/gerar_manipular_imagens.dart';
-import "package:image_layout/telas/menu_editor_fotos.dart";
-import "package:image_layout/telas/subtelas/alerta_erro.dart";
-import 'package:image_layout/telas/subtelas/alerta_confirmar_desicao.dart';
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/utils/enum_app_values.dart';
+import 'package:image_layout/editors_tools/photo_editor_src_tools.dart';
+import "package:image_layout/screens/photo_editor_manual.dart";
+import "package:image_layout/screens/sub_screen/alerta_erro.dart";
+import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
+import 'package:image_layout/application_theme_pers.dart';
 
 
 class EditorImagemArgs{

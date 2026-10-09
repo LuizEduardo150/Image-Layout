@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/application_theme_pers.dart';
 
 Future<void> exibirTelaMudarNomeLayoutSalvo({required TextEditingController controlerNomeLayout, required context, required VoidCallback funcaoConfirmar}) async{
   await showDialog(context: context, builder: (context){

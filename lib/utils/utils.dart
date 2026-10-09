@@ -80,17 +80,24 @@ num pxToCm(int ppi, num valPX){
   return (2.54 * valPX) / ppi;
 }
 
-///testar
+
 int? cmToPx(int ppi, String valCM){
+  
   valCM = valCM.replaceAll(',', '.');
-  if(valCM == ''){valCM = '0';}
+  if(valCM == ''){
+    valCM = '0';
+  }
+  
   if(stringIsNumeric(valCM)){ //valor com ou sem ponto flutuante valido
     num cm = num.parse(valCM);
     num valPx = (ppi * cm) / 2.54;
     int? result = stringParseInt(valPx.toString());
+    
     return result;
+
   }
-  else{ //nao representa um valor numerico real
-    return null;
+  else{
+    
+    return null; //nao representa um valor numerico real
   }
 }

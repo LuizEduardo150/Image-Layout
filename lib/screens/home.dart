@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/application_theme_pers.dart';
 import 'package:image_layout/persistence/config_app.dart';
 
 

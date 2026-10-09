@@ -10,9 +10,6 @@ extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
         return 'cm';
       case UnidadeDeMedida.pixels:
         return 'px';
-      // TODO Remover dps
-      //default:
-        //return '';
     }
   }
 
@@ -23,9 +20,6 @@ extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
         return 'Centímetros';
       case UnidadeDeMedida.pixels:
         return 'Pixels';
-      // TODO Remover dps
-      //default:
-        //return '';
     }
   }
 

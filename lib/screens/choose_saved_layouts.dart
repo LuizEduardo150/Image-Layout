@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_layout/persistence/layout_persistence.dart';
-import 'package:image_layout/telas/editor_imagens.dart';
-import 'package:image_layout/utils/funcoes_cast.dart';
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/screens/photo_editor.dart';
+import 'package:image_layout/utils/utils.dart';
+import 'package:image_layout/application_theme_pers.dart';
 
 
 class NovoLayoutPredefinido extends StatefulWidget {

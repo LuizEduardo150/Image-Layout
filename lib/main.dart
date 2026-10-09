@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:image_layout/telas/configuracoes_tema.dart';
-import 'package:image_layout/telas/criar_novo_layout.dart';
-import 'package:image_layout/telas/editar_com_layouts_existentes.dart';
-import 'package:image_layout/telas/editor_imagens.dart';
-import 'package:image_layout/telas/editor_layout.dart';
-import 'package:image_layout/telas/gerenciar_layouts.dart';
-import 'package:image_layout/telas/home.dart';
-import 'package:image_layout/tema_cores.dart';
 import 'package:provider/provider.dart';
+
+import 'package:image_layout/screens/theme_configuration.dart';
+import 'package:image_layout/screens/criate_new_layout.dart';
+import 'package:image_layout/screens/choose_saved_layouts.dart';
+import 'package:image_layout/screens/photo_editor.dart';
+import 'package:image_layout/screens/layout_editor.dart';
+import 'package:image_layout/screens/manage_layouts.dart';
+import 'package:image_layout/screens/home.dart';
+import 'package:image_layout/application_theme_pers.dart';
+
 
 void main() {
   runApp(const MyApp());

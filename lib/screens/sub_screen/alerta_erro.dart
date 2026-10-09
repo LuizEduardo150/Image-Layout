@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/application_theme_pers.dart';
 
 class AlertaErroDialogBox extends StatelessWidget{
   final String texto;

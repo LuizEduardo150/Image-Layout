@@ -1,8 +1,8 @@
 import 'dart:typed_data';  //para usar o unit8list para visualização
 import 'package:flutter/material.dart';
 
-import 'package:image_layout/tema_cores.dart';
-import 'package:image_layout/utils/enumarator_qualidade_foto_e_unidade_medida.dart';
+import 'package:image_layout/application_theme_pers.dart';
+import 'package:image_layout/utils/enum_app_values.dart';
 
 import "package:image/image.dart" as img;
 import 'package:image_cropper/image_cropper.dart';
@@ -300,7 +300,7 @@ class ImagensLayoutEditor {
       return false;
     }
     //salvar na galeria em formato jpg
-    final png = img.encodePng(_imagemLayout!); 
+    //final png = img.encodePng(_imagemLayout!); 
     // TODO
     //final result = await ImageGallerySaver.saveImage(png, name: nomeArquivo, quality: 100);
     print("Era para salvar");

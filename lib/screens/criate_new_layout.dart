@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:image_layout/telas/editor_layout.dart';
-import 'package:image_layout/utils/funcoes_cast.dart';
-import 'package:image_layout/utils/enumarator_qualidade_foto_e_unidade_medida.dart';
-import 'package:image_layout/tema_cores.dart';
+import 'package:image_layout/screens/layout_editor.dart';
+import 'package:image_layout/utils/utils.dart';
+import 'package:image_layout/utils/enum_app_values.dart';
+import 'package:image_layout/application_theme_pers.dart';
 
 
 class CriarNovoLayoutPage extends StatefulWidget {
