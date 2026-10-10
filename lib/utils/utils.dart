@@ -1,35 +1,43 @@
-bool stringIsNumeric(String? valor){
-  if(valor == null) {return false;}
-  if(valor == '') {return true;}
-  int qtdPt = 0;
-  for(int i=0; i<valor.length; i++){
-    if(valor[i] == '0' || valor[i] == '1' || valor[i] == '2'){}
-    else if(valor[i] == '3' || valor[i] == '4' || valor[i] == '5'){}
-    else if(valor[i] == '6' || valor[i] == '7' || valor[i] == '8' || valor[i] == '9'){}
-    else{
-      if(valor[i] == '.'){
-        qtdPt++;
-      }else {
-        return false;
-      }
+bool stringIsNumeric(String? value){
+
+  if(value == null) {return false;}
+  if(value == '') {return true;}
+  
+  int amtDot = 0;
+  
+  for(int i=0; i<value.length; i++){
+    
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].contains(value[i])) {
+      // OK
     }
+    
+    else if(value[i] == '.'){
+      amtDot++;  
+    }
+    
+    else {
+        return false;
+    }
+    
   }
-  if(qtdPt >= 2) {
+
+  if(amtDot >= 2) {
     return false;
   }
 
   return true;
 }
 
-bool stringIsInt(String? valor){
-  if(valor == null) {
+
+bool stringIsInt(String? value){
+  if(value == null) {
     return false;
   }
-  if(valor == ''){return true;}
+  if(value == ''){return true;}
 
-  if(stringIsNumeric(valor)){
-    for(int i=0; i<valor.length; i++){
-      if(valor[i] == '.'){
+  if(stringIsNumeric(value)){
+    for(int i=0; i<value.length; i++){
+      if(value[i] == '.'){
         return false;
       }
     }
@@ -39,42 +47,58 @@ bool stringIsInt(String? valor){
   return true;
 }
 
+
 ///>> Parseia string para int, independetemente se o número
 ///   possui casa decimal. Se tiver, ele desconsidera
 ///   a primeira parte decimal for maior que 4.
 ///>> Se a string for vazia, vira 0.
 int? stringParseInt(String conteudo){
   if(conteudo == ''){return 0;}
+
   conteudo = conteudo.replaceAll(',', '.');
+  
   if(stringIsNumeric(conteudo) && stringIsInt(conteudo)) {
     return int.parse(conteudo);
-  } else if(stringIsNumeric(conteudo) && !(stringIsInt(conteudo))){
+  }
+  
+  else if(stringIsNumeric(conteudo) && !(stringIsInt(conteudo))){
     List partes = conteudo.split('.');
     int comp = int.parse(partes[1][0]);
     int add = 0;
+    
     if(comp >= 5){
       add = 0;
     }
-    int retorno = int.parse(partes[0]);
-    return retorno + add;
-  }else {
+    
+    int returnVar = int.parse(partes[0]);
+    return returnVar + add;
+  
+  }
+  
+  else {
     return null;
   }
 }
 
+
 List<List<int>>? parseSharedPrefsToIntList(List<dynamic> l){
 
-  List<List<int>>? listaRetorno = [];
+  List<List<int>>? returnList = [];
 
   for(int i =0; i<l.length;i++){
+    
     List<int> aux = [];
+    
     for(int j =0; j<l[i].length;j++){
       aux.add(l[i][j]);
     }
-    listaRetorno.add(aux);
+
+    returnList.add(aux);
   }
-  return listaRetorno;
+
+  return returnList;
 }
+
 
 num pxToCm(int ppi, num valPX){
   return (2.54 * valPX) / ppi;

@@ -17,19 +17,19 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool loaded = false;
   
-  void iniciar(TemaAplicacao tema) async{
+  void startF(AppThemePers theme) async{
     if(!loaded){
-      String temaNome = await ConfigApp.carergarTema();
-      if(temaNome == 'claro'){
-        tema.setTemaClaro();
-      }else if(temaNome == 'escuro'){
-        tema.setTemaEscuro();
+      String themeName = await ConfigApp.loadTheme();
+      if(themeName == 'claro'){
+        theme.setLightTheme();
+      }else if(themeName == 'escuro'){
+        theme.setDarkTheme();
       }
-      else if(temaNome == 'escuropadrao'){
-        tema.setTemaEscuroPadrao();
+      else if(themeName == 'escuropadrao'){
+        theme.setDarkThemeDefault();
       }
-      else if(temaNome == 'claropadrao'){
-        tema.setTemaClaroPadrao();
+      else if(themeName == 'claropadrao'){
+        theme.setLightThemeDefault();
       }
       loaded = true;
     }
@@ -37,9 +37,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(context) {
-    final tema = Provider.of<TemaAplicacao>(context);
+    final theme = Provider.of<AppThemePers>(context);
     final Size telaTamanho = MediaQuery.of(context).size;
-    iniciar(tema);
+    startF(theme);
 
     final List<Widget> carouselItems = [
       Image.asset("assets/images/ly1.png"),
@@ -53,36 +53,36 @@ class _HomeState extends State<Home> {
     ];
 
     return Scaffold(
-      backgroundColor: tema.corDefundo,
+      backgroundColor: theme.bkgColor,
       appBar: AppBar(
         title: const Text("Image Layout"),
         foregroundColor: Colors.white,
-        backgroundColor: tema.corBotoes,
+        backgroundColor: theme.buttonColor,
       ),
       drawer: Drawer(
-        backgroundColor: tema.corBotoes,
+        backgroundColor: theme.buttonColor,
         child: ListView(children: [
           Padding(padding: EdgeInsets.all(telaTamanho.height*0.02)),
           Image.asset('assets/images/logo.png'),
           Padding(padding: EdgeInsets.all(telaTamanho.height*0.01)),
-          Container(color: tema.corDosIcones, padding: const EdgeInsets.only(top: 1),),
+          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
           ListTile(
             tileColor: Colors.white10,
             onTap: ()async {
-              await Navigator.pushNamed(context, "/configuracaoTema");
-              ConfigApp.setTema(tema.temaAtual);
+              await Navigator.pushNamed(context, "/configuracaoTheme");
+              ConfigApp.setTheme(theme.currentTheme);
             },
             title: Column(children: [
-                  Icon(Icons.format_paint, color: tema.corDosIcones, size: 50,),
-                  Text("Mudar o tema da aplicação", style: TextStyle(color: tema.corDaFonte, fontSize: 20, fontWeight: FontWeight.bold),)
+                  Icon(Icons.format_paint, color: theme.iconsColor, size: 50,),
+                  Text("Mudar o theme da aplicação", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold),)
             ],),
           ),
 
-          Container(color: tema.corDosIcones, padding: const EdgeInsets.only(top: 1),),
+          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
         
           Padding(padding: EdgeInsets.all(telaTamanho.height*0.01)),
           
-          Container(color: tema.corDosIcones, padding: const EdgeInsets.only(top: 1),),
+          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
 
           ListTile(
               tileColor: Colors.white10,
@@ -90,12 +90,12 @@ class _HomeState extends State<Home> {
                 SystemNavigator.pop();
                 }, // fecha o aplicativo, funciona apenas no Android,
               title: Column(children: [
-                Icon(Icons.exit_to_app, color: tema.corDosIcones, size: 50,),
-                Text("Sair do aplicativo", style: TextStyle(color: tema.corDaFonte, fontSize: 20, fontWeight: FontWeight.bold),)
+                Icon(Icons.exit_to_app, color: theme.iconsColor, size: 50,),
+                Text("Sair do aplicativo", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold),)
               ],),
           ),
 
-          Container(color: tema.corDosIcones, padding: const EdgeInsets.only(top: 1),),
+          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
         ],),
       ),
 
@@ -108,16 +108,16 @@ class _HomeState extends State<Home> {
                     Navigator.pushNamed(context, "/criarNovoLayout");
                   },
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: tema.corDosIcones,
-                      backgroundColor: tema.corBotoes,
+                      foregroundColor: theme.iconsColor,
+                      backgroundColor: theme.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
                   ),
                   child: Column(children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add, size: telaTamanho.width*0.22, color: tema.corDosIcones, ),
-                        Icon(Icons.space_dashboard_sharp, size: telaTamanho.width*0.22, color: tema.corDosIcones,),
+                        Icon(Icons.add, size: telaTamanho.width*0.22, color: theme.iconsColor, ),
+                        Icon(Icons.space_dashboard_sharp, size: telaTamanho.width*0.22, color: theme.iconsColor,),
                       ],
                     ),
                     const Text('Criar novo layout',
@@ -136,16 +136,16 @@ class _HomeState extends State<Home> {
                     Navigator.pushNamed(context, "/editarComlayoutsExistentes");
                   },
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: tema.corDosIcones,
-                      backgroundColor: tema.corBotoes,
+                      foregroundColor: theme.iconsColor,
+                      backgroundColor: theme.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
                   ),
                   child: Column(children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.photo, size: telaTamanho.width*0.22, color: tema.corDosIcones,),
-                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: tema.corDosIcones,)
+                        Icon(Icons.photo, size: telaTamanho.width*0.22, color: theme.iconsColor,),
+                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
                       ],
                     ),
                     const Text('Editar com layouts existentes',textAlign: TextAlign.center,
@@ -164,15 +164,15 @@ class _HomeState extends State<Home> {
                     Navigator.pushNamed(context, "/gerenciarLayouts");
                   },
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: tema.corDosIcones,
-                      backgroundColor: tema.corBotoes,
+                      foregroundColor: theme.iconsColor,
+                      backgroundColor: theme.buttonColor,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
                   ),
                   child: Column(children: [
                     Row(mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.save_as_rounded, size: telaTamanho.width*0.22, color: tema.corDosIcones,),
-                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: tema.corDosIcones,)
+                        Icon(Icons.save_as_rounded, size: telaTamanho.width*0.22, color: theme.iconsColor,),
+                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
                       ],),
                     const Text('Gerenciar layouts salvos',
                       style: TextStyle(
@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
               Padding(padding: EdgeInsets.only(top: telaTamanho.height*0.03),
                 child: Text("Construa diversas configurações de layout para criar suas fotos",
                     style: TextStyle(
-                      color: tema.corDaFonte,
+                      color: theme.fontColor,
                       fontSize: telaTamanho.width*0.06,
                       fontWeight: FontWeight.bold,
                     )

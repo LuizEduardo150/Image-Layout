@@ -1,24 +1,24 @@
-enum UnidadeDeMedida{
+enum UnitOfMeasurement{
   pixels,
-  centimetros,
+  centimeters,
 }
 
-extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
-  String toStringReduzido() {
+extension UnitOfMeasurementExtensions on UnitOfMeasurement {
+  String toStringReduced() {
     switch (this) {
-      case UnidadeDeMedida.centimetros:
+      case UnitOfMeasurement.centimeters:
         return 'cm';
-      case UnidadeDeMedida.pixels:
+      case UnitOfMeasurement.pixels:
         return 'px';
     }
   }
 
 
-  String toStringExpandido(){
+  String toStringExpanded(){
     switch (this) {
-      case UnidadeDeMedida.centimetros:
+      case UnitOfMeasurement.centimeters:
         return 'Centímetros';
-      case UnidadeDeMedida.pixels:
+      case UnitOfMeasurement.pixels:
         return 'Pixels';
     }
   }
@@ -26,36 +26,36 @@ extension UnidadeDeMedidaExtensions on UnidadeDeMedida {
 }
 
 
-enum Qualidade{
-  alta,
-  media,
-  baixa,
-  muitoBaixa,
+enum Quality{
+  high,
+  medium,
+  low,
+  verylow,
 }
 
-extension QualidadeExtensions on Qualidade {
+extension QualidadeExtensions on Quality {
   int getValorPPI() {
     switch (this) {
-      case Qualidade.alta:
+      case Quality.high:
         return 400;
-      case Qualidade.media:
+      case Quality.medium:
         return 300;
-      case Qualidade.baixa:
+      case Quality.low:
         return 200;
-      case Qualidade.muitoBaixa:
+      case Quality.verylow:
         return 100;
     }
   }
 
-  int getValorCompressaoImagemGaleria(){
+  int getGalleryCompressionValue(){
     switch (this) {
-      case Qualidade.alta:
+      case Quality.high:
         return 100;
-      case Qualidade.media:
+      case Quality.medium:
         return 80;
-      case Qualidade.baixa:
+      case Quality.low:
         return 60;
-      case Qualidade.muitoBaixa:
+      case Quality.verylow:
         return 40;
     }
   }

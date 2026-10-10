@@ -5,27 +5,29 @@ import 'package:image_layout/utils/enum_app_values.dart';
 import 'package:image_layout/application_theme_pers.dart';
 
 
-class MenuAddEspacamento extends StatelessWidget{
-  final TextEditingController controlerEspacamentoHorizontal;
-  final TextEditingController controlerEspacamentoVertical;
+class AddspaceBtwnImagesMenu extends StatelessWidget{
+  final TextEditingController controlerHorizontalSpacing;
+  final TextEditingController controlerVerticalSpacing;
   final VoidCallback funcaoConfirmar;
-  final UnidadeDeMedida unidadeMedida;
-  const MenuAddEspacamento({super.key, required this.controlerEspacamentoHorizontal,
-    required this.controlerEspacamentoVertical, required this.funcaoConfirmar,
-    required this.unidadeMedida
+  final UnitOfMeasurement unitOfMeasurement;
+  
+  const AddspaceBtwnImagesMenu({super.key, required this.controlerHorizontalSpacing,
+    required this.controlerVerticalSpacing, required this.funcaoConfirmar,
+    required this.unitOfMeasurement
   });
+
 
   @override
   Widget build(BuildContext context){
-    final tema = Provider.of<TemaAplicacao>(context);
+    final theme = Provider.of<AppThemePers>(context);
 
     return ListView(
       shrinkWrap: true,
       children: [
       AlertDialog(
         insetPadding: const EdgeInsets.all(0),
-          backgroundColor: tema.corDefundo,
-        title: Text("Espaçamento entre imagens", textAlign: TextAlign.center,style: TextStyle(fontSize: 20, color: tema.corDaFonte),),
+          backgroundColor: theme.bkgColor,
+        title: Text("Espaçamento entre imagens", textAlign: TextAlign.center,style: TextStyle(fontSize: 20, color: theme.fontColor),),
         titlePadding: const EdgeInsets.all(5),
         content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -34,20 +36,35 @@ class MenuAddEspacamento extends StatelessWidget{
 
               Row(children: [
                 const Padding(padding: EdgeInsets.all(5)),
-                Text("Espaçamento\nHorizontal", style: TextStyle(color: tema.corDaFonte),),
+                Text("Espaçamento\nHorizontal", style: TextStyle(color: theme.fontColor),),
                 const Padding(padding: EdgeInsets.all(5)),
-                SizedBox(width: 100, height: 50, child: TextField(style: TextStyle(color: tema.corDaFonte), decoration: const InputDecoration(border: OutlineInputBorder()), controller: controlerEspacamentoHorizontal, keyboardType: TextInputType.number),),
-                Text(unidadeMedida.toStringReduzido(), style: TextStyle(color: tema.corFonteSecundaria),),
+                
+                SizedBox(
+                  width: 100, height: 50, 
+                  child: TextField(
+                    style: TextStyle(color: theme.fontColor),
+                    decoration: const InputDecoration(border: OutlineInputBorder()),
+                    controller: controlerHorizontalSpacing, keyboardType: TextInputType.number)
+                ),
+                Text(unitOfMeasurement.toStringReduced(), style: TextStyle(color: theme.secondFontColor),),
               ],),
 
               const Padding(padding: EdgeInsets.all(5)),
 
               Row(children: [
                 const Padding(padding: EdgeInsets.all(5)),
-                Text("Espaçamento\nVertical", style: TextStyle(color: tema.corDaFonte),),
+                Text("Espaçamento\nVertical", style: TextStyle(color: theme.fontColor),),
                 const Padding(padding: EdgeInsets.all(5)),
-                SizedBox(width: 100, height: 50, child: TextField(style: TextStyle(color: tema.corDaFonte), decoration: const InputDecoration(border: OutlineInputBorder()), controller: controlerEspacamentoVertical, keyboardType: TextInputType.number),),
-                Text(unidadeMedida.toStringReduzido(), style: TextStyle(color: tema.corFonteSecundaria),),
+                
+                SizedBox(
+                  width: 100, height: 50,
+                  child: TextField(
+                    style: TextStyle(color: theme.fontColor),
+                    decoration: const InputDecoration(border: OutlineInputBorder()),
+                    controller: controlerVerticalSpacing, keyboardType: TextInputType.number)
+                ),
+                
+                Text(unitOfMeasurement.toStringReduced(), style: TextStyle(color: theme.secondFontColor),),
               ],),
 
               const Padding(padding: EdgeInsets.all(5)),

@@ -3,48 +3,48 @@ import 'package:provider/provider.dart';
 
 import 'package:image_layout/application_theme_pers.dart';
 
-class SubTelaConfirmacao extends StatelessWidget{
-  final String texto;
-  final String subtexto;
-  final VoidCallback funcaoConfirmar;
-  const SubTelaConfirmacao({super.key, required this.subtexto, required this.texto ,required this.funcaoConfirmar});
+class ConfirmDecisionDialog extends StatelessWidget{
+  final String text;
+  final String subtext;
+  final VoidCallback confirmFunction;
+  const ConfirmDecisionDialog({super.key, required this.subtext, required this.text ,required this.confirmFunction});
 
   @override
   Widget build(context){
-    final tema = Provider.of<TemaAplicacao>(context);
-    final Size telaTamanho = MediaQuery.of(context).size;
+    final theme = Provider.of<AppThemePers>(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     return AlertDialog(
       scrollable: true,
-      backgroundColor: tema.corBotoes,
+      backgroundColor: theme.buttonColor,
       contentPadding: const EdgeInsets.all(5),
 
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.warning, color: Colors.amber, size: telaTamanho.height*0.05,),
+          Icon(Icons.warning, color: Colors.amber, size: screenSize.height*0.05,),
           const Text("  Atenção", style: TextStyle(fontSize: 30, color: Colors.amber), textAlign: TextAlign.center),
         ],
       ),
       titlePadding: const EdgeInsets.all(10),
       
       content: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: tema.corDefundo),
-        padding: EdgeInsets.only(left: telaTamanho.width*0.03, right: telaTamanho.width*0.03),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: theme.bkgColor),
+        padding: EdgeInsets.only(left: screenSize.width*0.03, right: screenSize.width*0.03),
 
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const Padding(padding: EdgeInsets.all(4)),
-            Text(texto,
+            Text(text,
               softWrap: true,
-              style: TextStyle(fontSize: 20, color: tema.corDaFonte),
+              style: TextStyle(fontSize: 20, color: theme.fontColor),
               textAlign: TextAlign.justify,
             ),
             const Padding(padding: EdgeInsets.all(4)),
-            Text(subtexto,
+            Text(subtext,
               softWrap: true,
-              style: TextStyle(fontSize: 20, color: tema.corDaFonte),
+              style: TextStyle(fontSize: 20, color: theme.fontColor),
             ),
             const Padding(padding: EdgeInsets.all(4)),
           ],
@@ -56,13 +56,13 @@ class SubTelaConfirmacao extends StatelessWidget{
             
             children: [
 
-              ElevatedButton(onPressed: funcaoConfirmar,
+              ElevatedButton(onPressed: confirmFunction,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.only(right: 20, left: 20),
-                    backgroundColor: tema.corBotoes,
+                    backgroundColor: theme.buttonColor,
                     elevation: 0, // Removendo a sombra
                   ),
-                  child: Text("SIM", style: TextStyle(fontSize: 18, color: tema.corDosIcones)),
+                  child: Text("SIM", style: TextStyle(fontSize: 18, color: theme.iconsColor)),
                 ),
 
                 const Padding(padding: EdgeInsets.only(right: 25)),
@@ -73,10 +73,10 @@ class SubTelaConfirmacao extends StatelessWidget{
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.only(right: 20, left: 20),
-                    backgroundColor: tema.corBotoes,
+                    backgroundColor: theme.buttonColor,
                     elevation: 0, // Removendo a sombra
                   ),
-                  child: Text("NÃO", style: TextStyle(fontSize: 18, color: tema.corIconeBototesClaro)),
+                  child: Text("NÃO", style: TextStyle(fontSize: 18, color: theme.lightButtonIconsColor)),
                 ),
             ]
         )],

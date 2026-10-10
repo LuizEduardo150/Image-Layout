@@ -8,56 +8,56 @@ import "package:image_layout/utils/utils.dart";
 
 class LayoutMaker{
   /// atributos de configuracao do documento
-  int? _larguraDocumento;
-  int? _alturaDocumento;
-  int _borda = 0;
+  int? _documentWidth;
+  int? _documentHeight;
+  int _border = 0;
   int _paddingX = 0;
   int _paddingY = 0;
-  UnidadeDeMedida _unidade = UnidadeDeMedida.pixels;
-
+  UnitOfMeasurement _unit = UnitOfMeasurement.pixels;
+   
   /// atributos para dados finais
   img.Image? _layoutDoc; // visualizacao do layout criado
-  List _espacosDeImagens = [];  // Lista que deve ser usada para definir posicao das imagens [x0, y0, x1, y1]
+  List _imagesSpacesList = [];  // Lista que deve ser usada para definir posicao das imagens [x0, y0, x1, y1]
 
   /// atributos de controle do módulo
-  Qualidade _qualidadeDocumento = Qualidade.media;
-  List<int> cabecote = [0,0]; //onde se encontra a posição para comecar a preencher a matriz'imagem'
-  List acoesPilha = [];
-  int _restanteX = 0;
-  int _restanteY = 0;
-  int _alturaLinhaAtual = 0;
-  int _proxValDeY = 0;
-  int _proxValDeX = 0;
-  int _retornarNaAlturaDaLinhaAtual = 0;
-  int _alturaRecomendadaLinhaAtual = 0;
-  int _corEspacos = 20;
-  bool inverterVariacaoCor = false;
+  Quality _documentQuality = Quality.medium;
+  List<int> printhead = [0,0]; //onde se encontra a posição para comecar a preencher a matriz'imagem'
+  List stackActions = [];
+  int _remainingX = 0;
+  int _remainingY = 0;
+  int _currentLineHeight = 0;
+  int _nextValueY = 0;
+  int _nextValueX = 0;
+  int _returnToCurrentLineHeight = 0;
+  int _currLineRecommendedHeight = 0;
+  int _spaceColor = 20;
+  bool _invertVariantColor = false;
 
   ///constructor
-  LayoutMaker(UnidadeDeMedida unidadeDeMedida, int altura, int largura, int borda, Qualidade qualidadeDoc) {
-    _qualidadeDocumento = qualidadeDoc;
-    _unidade = unidadeDeMedida;
-    _borda = borda;
-    _alturaDocumento = altura;
-    _larguraDocumento = largura;
+  LayoutMaker(UnitOfMeasurement unitOfMeasurement, int altura, int largura, int borda, Quality qualidadeDoc) {
+    _documentQuality = qualidadeDoc;
+    _unit = unitOfMeasurement;
+    _border = borda;
+    _documentHeight = altura;
+    _documentWidth = largura;
     _layoutDoc = img.Image(width: largura, height: altura); //criando a imagem(matriz)
-    setCorDeFundo('white');
+    setBkgColor('white');
 
-    cabecote[0] = _borda;
-    cabecote[1] = _borda;
-    _restanteX = _larguraDocumento! - 2*_borda;
-    _restanteY = _alturaDocumento! - 2*_borda;
+    printhead[0] = _border;
+    printhead[1] = _border;
+    _remainingX = _documentWidth! - 2*_border;
+    _remainingY = _documentHeight! - 2*_border;
   }
 
-  void setQualidadeDocumento(Qualidade qualidade){
-    _qualidadeDocumento = qualidade;
+  void setDocumentQuality(Quality qualidade){
+    _documentQuality = qualidade;
   }
 
-  void setUnidadeDeMedida(UnidadeDeMedida valor){
-    _unidade = valor;
+  void setUnitOfMeasurement(UnitOfMeasurement valor){
+    _unit = valor;
   }
 
-  void setCorDeFundo([String cor = 'white']){
+  void setBkgColor([String cor = 'white']){
     if(cor == 'white'){
       for (var pixel in _layoutDoc!) {
         pixel.r = 250;
@@ -80,44 +80,44 @@ class LayoutMaker{
     }
   }
 
-  void setAltura(int valor){
+  void setHeight(int valor){
     if(valor < 0) {
       valor = valor * -1;
     }
-    _alturaDocumento = valor;
+    _documentHeight = valor;
   }
 
-  void setLargura(int valor){
+  void setWidth(int valor){
     if(valor < 0) {
       valor = valor * -1;
     }
-    _larguraDocumento = valor;
+    _documentWidth = valor;
   }
 
-  String setEspacamentoVertical(int valor){
-    if(valor < (_alturaDocumento! -_borda*2)){
-      if(valor > _restanteY && _alturaLinhaAtual != 0){//mudar valor de espacamento antes da quebra de linha
+  String setVerticalSpace(int value){
+    if(value < (_documentHeight! -_border*2)){
+      if(value > _remainingY && _currentLineHeight != 0){//mudar valor de espacamento antes da quebra de linha
         return "O espaçamento entre linhas não pode ser um valor maior que o tamanho restante do documento";
       }
-      if(_espacosDeImagens.isNotEmpty && _alturaLinhaAtual == 0 && valor > _paddingY){//troca de espacamento entre linhas no momento da quebra de linha
-        int diferenca = valor - _paddingY;
-        if((_proxValDeY + diferenca) > (_alturaDocumento! - 2*_borda)){
+      if(_imagesSpacesList.isNotEmpty && _currentLineHeight == 0 && value > _paddingY){//troca de espacamento entre linhas no momento da quebra de linha
+        int diferenca = value - _paddingY;
+        if((_nextValueY + diferenca) > (_documentHeight! - 2*_border)){
           return "Impossível trocar por esse valor, ele ultrapassa os limites do documento";
         }
-        _paddingY = valor;
-        _proxValDeY += diferenca;
-        _restanteY = _alturaDocumento! - _proxValDeY - _borda;
-        cabecote[1] += diferenca;
+        _paddingY = value;
+        _nextValueY += diferenca;
+        _remainingY = _documentHeight! - _nextValueY - _border;
+        printhead[1] += diferenca;
       }
-      else if(_espacosDeImagens.isNotEmpty && _alturaLinhaAtual == 0 && valor < _paddingY && _paddingY > 0){//reduziu o espacamento no momento da quebra de linha
-        int diferenca = _paddingY - valor;
-        _paddingY = valor;
-        _proxValDeY -= diferenca;
-        _restanteY = _alturaDocumento! - _proxValDeY - _borda;
-        cabecote[1] -= diferenca;
+      else if(_imagesSpacesList.isNotEmpty && _currentLineHeight == 0 && value < _paddingY && _paddingY > 0){//reduziu o espacamento no momento da quebra de linha
+        int diferenca = _paddingY - value;
+        _paddingY = value;
+        _nextValueY -= diferenca;
+        _remainingY = _documentHeight! - _nextValueY - _border;
+        printhead[1] -= diferenca;
       }
-      else if((_espacosDeImagens.isEmpty) || (_espacosDeImagens.isNotEmpty && _alturaLinhaAtual > 0)){ //trocar espacamento no inicio da edicao ou antes da quebra de linha, mudar apenas padding
-        _paddingY = valor;
+      else if((_imagesSpacesList.isEmpty) || (_imagesSpacesList.isNotEmpty && _currentLineHeight > 0)){ //trocar espacamento no inicio da edicao ou antes da quebra de linha, mudar apenas padding
+        _paddingY = value;
       }
 
       return 'ok';
@@ -127,32 +127,32 @@ class LayoutMaker{
     }
   }
 
-  String setEspacamentoHorizontal(int valor){
-    if(valor >= _larguraDocumento! - _borda*2) {
+  String setHorizontalSpace(int value){
+    if(value >= _documentWidth! - _border*2) {
       return "O espaçamento horizontal entre fotos deve ser menor que o própio tamanho do documento";
     }
 
-    if(_alturaLinhaAtual == 0){ //apenas setar o valor pois está no início de uma linha
-      _paddingX = valor;
+    if(_currentLineHeight == 0){ //apenas setar o valor pois está no início de uma linha
+      _paddingX = value;
       return "ok";
     }
-    //Valores trocados enquanto o cabecote permanece na mesma linha
+    //Valores trocados enquanto o printhead permanece na mesma linha
 
-    else if(valor < _paddingX){ //diminui o espacamento
-      int diferenca = _paddingX - valor;
-      _paddingX = valor;
-      cabecote[0] -= diferenca;
-      _restanteX += diferenca;
+    else if(value < _paddingX){ //diminui o espacamento
+      int diferenca = _paddingX - value;
+      _paddingX = value;
+      printhead[0] -= diferenca;
+      _remainingX += diferenca;
       return 'ok';
     }
-    else if(valor > _paddingX){ //aumenta o espacamento
-      int diferenca = valor - _paddingX;
-      if(valor >= _restanteX){
+    else if(value > _paddingX){ //aumenta o espacamento
+      int diferenca = value - _paddingX;
+      if(value >= _remainingX){
         return "Impossível usar esse valor de espacamento, pois ultrapassaria os limites do documento";
       }
-      _paddingX = valor;
-      cabecote[0] += diferenca;//n sei se tem q manipular o cabeçote aq.... fazer teste
-      _restanteX -= diferenca;
+      _paddingX = value;
+      printhead[0] += diferenca;//n sei se tem q manipular o cabeçote aq.... fazer teste
+      _remainingX -= diferenca;
       return "ok";
     }
     else { //não fez alteracoes alguma
@@ -161,41 +161,41 @@ class LayoutMaker{
   }
 
   //Método deve ser usado apenas no início, antes da edição começar
-  String setBorda(int valor){
-    if(!(valor > _larguraDocumento! || valor > _alturaDocumento!)){
-      _borda = valor;
-      cabecote[0] = valor;
-      cabecote[1] = valor;
-      _restanteX = _larguraDocumento! - _borda*2;
-      _restanteY = _alturaDocumento! - _borda*2;
+  String setBorder(int value){
+    if(!(value > _documentWidth! || value > _documentHeight!)){
+      _border = value;
+      printhead[0] = value;
+      printhead[1] = value;
+      _remainingX = _documentWidth! - _border*2;
+      _remainingY = _documentHeight! - _border*2;
       return "ok";
     }
     return "O tamanho da borda deve ser menor que o tamanho do própio documento.";
   }
 
-  Qualidade getQualidadeDocumento(){
-    return _qualidadeDocumento;
+  Quality getDocumentQuality(){
+    return _documentQuality;
   }
 
-  UnidadeDeMedida getUnidadeDeMedidaDocumento(){
-    return _unidade;
+  UnitOfMeasurement getunitOfMeasurementDocument(){
+    return _unit;
   }
 
-  int getRestanteX(){
-    return _restanteX;
+  int getRemainingX(){
+    return _remainingX;
   }
 
-  int getRestanteY(){
-    return _restanteY;
+  int getRemainingY(){
+    return _remainingY;
   }
 
-  int getLargura(){
-    if(_larguraDocumento != null) {return _larguraDocumento!;}
+  int getWidth(){
+    if(_documentWidth != null) {return _documentWidth!;}
     else {return 0;}
   }
 
   int getQTDespacosParaFotos(){
-    return _espacosDeImagens.length;
+    return _imagesSpacesList.length;
   }
 
   int getEspacamentoHorizontal(){
@@ -206,24 +206,24 @@ class LayoutMaker{
     return _paddingY;
   }
 
-  int getAltura(){
-    if(_alturaDocumento != null) {
-      return _alturaDocumento!;
+  int getHeight(){
+    if(_documentHeight != null) {
+      return _documentHeight!;
     } else {
       return 0;
     }
   }
 
-  int getAlturaLinhaAtual(){
-    return _alturaLinhaAtual;
+  int getCurrentLineHeight(){
+    return _currentLineHeight;
   }
 
-  int getAlturaRecomendadaLinhaAtual(){
-    return _alturaRecomendadaLinhaAtual;
+  int getCurrLineRecommendedHeight(){
+    return _currLineRecommendedHeight;
   }
 
-  List getPosicoesParaImagens(){
-    return _espacosDeImagens;
+  List getPositionsToImages(){
+    return _imagesSpacesList;
   }
 
   //Método para exibir o layout montado em tela
@@ -232,25 +232,25 @@ class LayoutMaker{
   }
 
   void clearAll(){
-    setCorDeFundo("black");
-    cabecote[0] = _borda;
-    cabecote[1] = _borda;
-    _restanteX = _larguraDocumento! - 2*_borda;
-    _restanteY = _alturaDocumento! - 2*_borda;
-    _espacosDeImagens = [];
-    _alturaLinhaAtual = 0;
-    acoesPilha = [];
-    _alturaRecomendadaLinhaAtual = 0;
-    _retornarNaAlturaDaLinhaAtual = 0;
-    _corEspacos = 50;
-    inverterVariacaoCor = false;
-    _proxValDeX = _borda;
+    setBkgColor("black");
+    printhead[0] = _border;
+    printhead[1] = _border;
+    _remainingX = _documentWidth! - 2*_border;
+    _remainingY = _documentHeight! - 2*_border;
+    _imagesSpacesList = [];
+    _currentLineHeight = 0;
+    stackActions = [];
+    _currLineRecommendedHeight = 0;
+    _returnToCurrentLineHeight = 0;
+    _spaceColor = 50;
+    _invertVariantColor = false;
+    _nextValueX = _border;
   }
 
-  void desfazerUmaAcao(){
-    if(_espacosDeImagens.isNotEmpty){
-      List posDeletar = _espacosDeImagens.removeLast();
-      acoesPilha.removeLast();
+  void undoAction(){
+    if(_imagesSpacesList.isNotEmpty){
+      List posDeletar = _imagesSpacesList.removeLast();
+      stackActions.removeLast();
 
       int x,y;
       for(x = posDeletar[0]; x < posDeletar[2]; x++){ //remover marcacao do layout
@@ -258,151 +258,150 @@ class LayoutMaker{
           _layoutDoc!.setPixelRgb(x, y, 255, 255, 255);
         }
       }
-      cabecote[0] = posDeletar[0];
-      cabecote[1] = posDeletar[1];
+      printhead[0] = posDeletar[0];
+      printhead[1] = posDeletar[1];
 
-      if(acoesPilha.isNotEmpty){
-        _alturaLinhaAtual = acoesPilha.last[0];
-        _proxValDeY = acoesPilha.last[1];
-        _restanteX = acoesPilha.last[2];
-        _restanteY = acoesPilha.last[3];
-        _alturaRecomendadaLinhaAtual = acoesPilha.last[4];
+      if(stackActions.isNotEmpty){
+        _currentLineHeight = stackActions.last[0];
+        _nextValueY = stackActions.last[1];
+        _remainingX = stackActions.last[2];
+        _remainingY = stackActions.last[3];
+        _currLineRecommendedHeight = stackActions.last[4];
       }else{
-        _alturaLinhaAtual = 0;
-        _proxValDeY = 0;
-        _restanteX = _larguraDocumento! - _borda*2;
-        _restanteY = _alturaDocumento! - _borda*2;
-        _alturaRecomendadaLinhaAtual = 0;
+        _currentLineHeight = 0;
+        _nextValueY = 0;
+        _remainingX = _documentWidth! - _border*2;
+        _remainingY = _documentHeight! - _border*2;
+        _currLineRecommendedHeight = 0;
       }
     }
   }
 
-  Future<String> criarEspacoDeImagem(int altura, int largura)async{ //casos de erro são entregues na hora
+  Future<String> createSpaceToImage(int altura, int largura)async{ //casos de erro são entregues na hora
 
     // __ Tratamento de entradas
-    if(largura > _larguraDocumento! - _borda*2 || altura > _alturaDocumento! - _borda*2) {
+    if(largura > _documentWidth! - _border*2 || altura > _documentHeight! - _border*2) {
       return "As dimenções informadas são maiores que a própria área editável do documento";
     }
-    else if(altura > _restanteY) {
+    else if(altura > _remainingY) {
       return "não há espaco suficiente de altura para a medida informada";
     }
-    else if(largura > _restanteX) {
+    else if(largura > _remainingX) {
       return "não há espaco suficiente de largura para essa medida";
     }
     else if(altura <= 0 || largura <= 0){return 'ok';} //não executa nada, mas tambem nao gera erro
 
     /// _______execucao do metodo...
-    if(_alturaLinhaAtual == 0){ //troca de linha ou inicio, setar valores de controle
-      _alturaLinhaAtual = altura;
-      _proxValDeY = altura+cabecote[1];
-      _retornarNaAlturaDaLinhaAtual = cabecote[1];
-      _alturaRecomendadaLinhaAtual = altura;
+    if(_currentLineHeight == 0){ //troca de linha ou inicio, setar valores de controle
+      _currentLineHeight = altura;
+      _nextValueY = altura+printhead[1];
+      _returnToCurrentLineHeight = printhead[1];
+      _currLineRecommendedHeight = altura;
 
-      //backup: if(altura > _alturaLinhaAtual)
-    }else if(altura > _alturaRecomendadaLinhaAtual){ // Mesma linha, porem valores maiores podem ser inseridos exigindo mudanca
-      altura - _alturaLinhaAtual > 0 ? _alturaLinhaAtual += (altura - _alturaLinhaAtual) : _alturaLinhaAtual += (altura-_alturaRecomendadaLinhaAtual);
+      //backup: if(altura > _currentLineHeight)
+    }else if(altura > _currLineRecommendedHeight){ // Mesma linha, porem valores maiores podem ser inseridos exigindo mudanca
+      altura - _currentLineHeight > 0 ? _currentLineHeight += (altura - _currentLineHeight) : _currentLineHeight += (altura-_currLineRecommendedHeight);
 
-      _proxValDeY = altura+cabecote[1];
+      _nextValueY = altura+printhead[1];
     }
-
 
     ///ADICIONANDO espaco de imagem
     int x = 0;
     int y = 0;
-    for(x=cabecote[0]; x<largura+cabecote[0]; x++){
-      for(y=cabecote[1]; y<altura+cabecote[1]; y++){
-        _layoutDoc?.setPixelRgb(x, y, _corEspacos, _corEspacos, _corEspacos); //pintando a area de imagem
+    for(x=printhead[0]; x<largura+printhead[0]; x++){
+      for(y=printhead[1]; y<altura+printhead[1]; y++){
+        _layoutDoc?.setPixelRgb(x, y, _spaceColor, _spaceColor, _spaceColor); //pintando a area de imagem
       }
     }
 
     ///salvando posicao XY inicial e final do espaco atual, destinado a uma imagem
-    _espacosDeImagens.add([cabecote[0], cabecote[1], x, y]);
+    _imagesSpacesList.add([printhead[0], printhead[1], x, y]);
 
-
-    /// Movimentacao dos cabecotes:
+    /// Movimentacao dos printheads:
     //Nao chegou nos limites de largura
-    if (_alturaRecomendadaLinhaAtual != 0){
-      if(_alturaRecomendadaLinhaAtual != 0 && altura <= _alturaRecomendadaLinhaAtual){//não ocupou a altura da linha toda. Cabe mais espacos.
-        _alturaRecomendadaLinhaAtual = _alturaRecomendadaLinhaAtual - altura;
-        if(_alturaRecomendadaLinhaAtual != 0){ //Continua sobrando espaco embaixo de um espaco adicionado
-          _alturaRecomendadaLinhaAtual -= _paddingY;
+    if (_currLineRecommendedHeight != 0){
+      if(_currLineRecommendedHeight != 0 && altura <= _currLineRecommendedHeight){//não ocupou a altura da linha toda. Cabe mais espacos.
+        _currLineRecommendedHeight = _currLineRecommendedHeight - altura;
+        if(_currLineRecommendedHeight != 0){ //Continua sobrando espaco embaixo de um espaco adicionado
+          _currLineRecommendedHeight -= _paddingY;
         }
-        cabecote[1] = y + _paddingY;
-        if(_proxValDeX < x){ //cabecote deve ser colocado onde nao conflite com os outros espacos
-          _proxValDeX = x;
+        printhead[1] = y + _paddingY;
+        if(_nextValueX < x){ //printhead deve ser colocado onde nao conflite com os outros espacos
+          _nextValueX = x;
         }
-      }else if(_alturaRecomendadaLinhaAtual != 0 && altura > _alturaRecomendadaLinhaAtual){ //usuario quer inserir algo maior, deve-se pular pro lado o cabecote
-        if(_restanteX > 0){//ainda há espaco na mesma linha
-          if(_proxValDeX < x){ //cabecote deve ser colocado onde nao conflite com os outros espacos
-            _proxValDeX = x;
+      }else if(_currLineRecommendedHeight != 0 && altura > _currLineRecommendedHeight){ //usuario quer inserir algo maior, deve-se pular pro lado o printhead
+        if(_remainingX > 0){//ainda há espaco na mesma linha
+          if(_nextValueX < x){ //printhead deve ser colocado onde nao conflite com os outros espacos
+            _nextValueX = x;
           }
 
-          _alturaRecomendadaLinhaAtual = 0; //irá passar na proxima condicao para movimentar o cabecote
+          _currLineRecommendedHeight = 0; //irá passar na proxima condicao para movimentar o printhead
         }
       }
 
-      if(_alturaRecomendadaLinhaAtual == 0 && x != _larguraDocumento! - _borda){ //primeira insercao na linha ou acabou espacos em baixo, deve pular pra direita
-        cabecote[0] = _proxValDeX + _paddingX;
-        cabecote[1] = _retornarNaAlturaDaLinhaAtual;
-        _restanteX = _larguraDocumento! -_borda - cabecote[0];
-        _alturaRecomendadaLinhaAtual = _alturaLinhaAtual;
-        _proxValDeX = 0;
+      if(_currLineRecommendedHeight == 0 && x != _documentWidth! - _border){ //primeira insercao na linha ou acabou espacos em baixo, deve pular pra direita
+        printhead[0] = _nextValueX + _paddingX;
+        printhead[1] = _returnToCurrentLineHeight;
+        _remainingX = _documentWidth! -_border - printhead[0];
+        _currLineRecommendedHeight = _currentLineHeight;
+        _nextValueX = 0;
       }
 
-      if(inverterVariacaoCor){ //Mudar a cor dos espacos para vezualisar os limites de cada espaco
-        _corEspacos - 20 <= 20 ? _corEspacos = 230 : _corEspacos -= 20;
+      if(_invertVariantColor){ //Mudar a cor dos espacos para vezualisar os limites de cada espaco
+        _spaceColor - 20 <= 20 ? _spaceColor = 230 : _spaceColor -= 20;
       }else{
-        _corEspacos + 20 >= 230 ? _corEspacos = 20 : _corEspacos += 20;
+        _spaceColor + 20 >= 230 ? _spaceColor = 20 : _spaceColor += 20;
       }
 
     }
     //chegou nos limites de largura e não há mais espaços sobrando na mesma linha. Deve pular de linha
-    if(_alturaRecomendadaLinhaAtual == 0 || (_restanteY > 0 && _restanteX == 0)){
-      _proxValDeX = 0;
-      _proxValDeY += _paddingY;
-      cabecote[0] = _borda;
-      cabecote[1] = _proxValDeY;
-      _restanteX = _larguraDocumento! - _borda*2;
-      _alturaLinhaAtual = 0;
-      _restanteY = _alturaDocumento! - _proxValDeY - _borda;
+    if(_currLineRecommendedHeight == 0 || (_remainingY > 0 && _remainingX == 0)){
+      _nextValueX = 0;
+      _nextValueY += _paddingY;
+      printhead[0] = _border;
+      printhead[1] = _nextValueY;
+      _remainingX = _documentWidth! - _border*2;
+      _currentLineHeight = 0;
+      _remainingY = _documentHeight! - _nextValueY - _border;
 
-      _corEspacos = 230;
-      if(!inverterVariacaoCor){
-        inverterVariacaoCor = true;
+      _spaceColor = 230;
+      if(!_invertVariantColor){
+        _invertVariantColor = true;
       }else{
-        inverterVariacaoCor = false;
-        _corEspacos = 20;
+        _invertVariantColor = false;
+        _spaceColor = 20;
       }
     }
 
     ///armazenando acao do usuario (para funcao desfazer)
-    _alturaLinhaAtual == _alturaRecomendadaLinhaAtual ?
-    acoesPilha.add([_alturaLinhaAtual, _proxValDeY, _restanteX, _restanteY, _alturaLinhaAtual])
+    _currentLineHeight == _currLineRecommendedHeight ?
+    stackActions.add([_currentLineHeight, _nextValueY, _remainingX, _remainingY, _currentLineHeight])
         :
-    acoesPilha.add([_alturaLinhaAtual, _proxValDeY, _restanteX, _restanteY, _alturaRecomendadaLinhaAtual]);
+    stackActions.add([_currentLineHeight, _nextValueY, _remainingX, _remainingY, _currLineRecommendedHeight]);
 
     return 'ok';
   }
 
-  void pularLinha(){
-    _proxValDeY += _paddingY;
-    cabecote[0] = _borda;
-    cabecote[1] = _proxValDeY;
-    _restanteX = _larguraDocumento! - _borda*2;
-    _alturaLinhaAtual = 0;
-    _restanteY = _alturaDocumento! - _proxValDeY - _borda;
+  void jumpLine(){
+    _nextValueY += _paddingY;
+    printhead[0] = _border;
+    printhead[1] = _nextValueY;
+    _remainingX = _documentWidth! - _border*2;
+    _currentLineHeight = 0;
+    _remainingY = _documentHeight! - _nextValueY - _border;
   }
 
-  Future<bool> salvarConfiguracaoLayoutSHPREF(String chave)async {
+  Future<bool> saveConfigurationLayoutSHPREF(String key) async {
     LayoutPersistence persistence = LayoutPersistence();
-    persistence.nome = chave;
-    List chaves = await persistence.getTodasAsChaves();
+    persistence.name = key;
+    List chaves = await persistence.getAllKeys();
 
-    if(chaves.contains(chave)){
+    if(chaves.contains(key)){
       return false;
-    }else{
-      num alturaThumb = _alturaDocumento!;
-      num larguraThumb = _larguraDocumento!;
+    }
+    else{
+      num alturaThumb = _documentHeight!;
+      num larguraThumb = _documentWidth!;
 
       while(alturaThumb > 100 || larguraThumb > 100){
         alturaThumb = alturaThumb / 2;
@@ -413,8 +412,8 @@ class LayoutMaker{
       String thumString = img.encodeJpg(thumbnail).toList().toString();
       thumString = thumString.substring(1, thumString.length - 1); //removendo [] da stirng
 
-      persistence.saveCoordenadasImg(getPosicoesParaImagens());
-      persistence.saveTamanhoDocumento(_larguraDocumento!, _alturaDocumento!);
+      persistence.saveCoordinatesImg(getPositionsToImages());
+      persistence.saveDocumentSize(_documentWidth!, _documentHeight!);
       persistence.saveThumbnailLayout(stringNumerosUint8List: thumString);
       return true;
     }

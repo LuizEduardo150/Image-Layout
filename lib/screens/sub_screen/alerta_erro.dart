@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 
 import 'package:image_layout/application_theme_pers.dart';
 
-class AlertaErroDialogBox extends StatelessWidget{
-  final String texto;
-  const AlertaErroDialogBox({super.key, required this.texto});
+class ErrorAlertDialogBox extends StatelessWidget{
+  final String text;
+  const ErrorAlertDialogBox({super.key, required this.text});
 
   @override
   Widget build(BuildContext context){
 
-    final tema = Provider.of<TemaAplicacao>(context);
-    final Size telaTamanho = MediaQuery.of(context).size;
+    final theme = Provider.of<AppThemePers>(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     return AlertDialog(
       scrollable: true,
-      backgroundColor: tema.corBotoes,
+      backgroundColor: theme.buttonColor,
       
       title: Row(
         mainAxisSize: MainAxisSize.min,
@@ -28,8 +28,8 @@ class AlertaErroDialogBox extends StatelessWidget{
       titlePadding: const EdgeInsets.all(10),
       
       content: Text(
-        texto,
-        style: TextStyle(fontSize: telaTamanho.height*0.04, color: tema.corDaFonte),
+        text,
+        style: TextStyle(fontSize: screenSize.height*0.04, color: theme.fontColor),
         textAlign: TextAlign.left,
         softWrap: true,
       ),
@@ -37,8 +37,8 @@ class AlertaErroDialogBox extends StatelessWidget{
       actions: [
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: tema.corBotoes,
-              foregroundColor: tema.corIconeBototesClaro
+              backgroundColor: theme.buttonColor,
+              foregroundColor: theme.lightButtonIconsColor
             ),
             onPressed: (){
               Navigator.of(context).pop();

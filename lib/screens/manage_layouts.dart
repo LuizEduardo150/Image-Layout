@@ -8,17 +8,17 @@ import 'package:image_layout/utils/utils.dart';
 import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
 import 'package:image_layout/screens/sub_screen/change_saved_layout_name.dart';
 import 'package:image_layout/screens/sub_screen/alerta_erro.dart';
-import 'package:image_layout/screens/criate_new_layout.dart';
+import 'package:image_layout/screens/create_new_layout.dart';
 
 
-class GerenciarLayouts extends StatefulWidget {
-  const GerenciarLayouts({super.key});
+class ManageLayouts extends StatefulWidget {
+  const ManageLayouts({super.key});
 
   @override
-  State<GerenciarLayouts> createState() => _GerenciarLayoutsState();
+  State<ManageLayouts> createState() => _ManageLayoutsState();
 }
 
-class _GerenciarLayoutsState extends State<GerenciarLayouts> {
+class _ManageLayoutsState extends State<ManageLayouts> {
 
   LayoutPersistence? persistence;
 
@@ -27,19 +27,19 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
   List<String> selectedItems = [];
   //itens da listview
   List<Uint8List> tumbnails = [];
-  List dimencoes = [];
-  List qtdImagens = [];
+  List dimensions = [];
+  List amtImagens = [];
 
   ///gerenciamento da pagina
   TextEditingController nomeLayoutControler = TextEditingController();
-  String titulo = 'Layouts salvos';
-  bool vazio = false;
+  String title = 'Layouts salvos';
+  bool empty = false;
   bool load = true;
 
   void exibirTelaErro(String textoErro){
     showDialog(context: context, builder: (context){
-      return AlertaErroDialogBox(
-        texto: textoErro,
+      return ErrorAlertDialogBox(
+        text: textoErro,
       );
     },);
   }
@@ -52,19 +52,19 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
   }
 
   Future<void> inicializar() async{
-    await persistence!.carregarChaves();
+    await persistence!.loadKeys();
     List alturaLargura;
     List cordenadas;
     Uint8List retGetThumb;
 
     inserirTumbnails()async{
-      for(int i=0; i< persistence!.chaves.length; i++){
-        persistence!.nome = persistence!.chaves[i];
-        items.add(persistence!.nome!);
-        alturaLargura = await persistence!.getTamanhoDocumento();
-        dimencoes.add([alturaLargura[1], alturaLargura[0]]);
-        cordenadas = await persistence!.getCoordenadasImg();
-        qtdImagens.add(cordenadas.length);
+      for(int i=0; i< persistence!.keys.length; i++){
+        persistence!.name = persistence!.keys[i];
+        items.add(persistence!.name!);
+        alturaLargura = await persistence!.getDocumentSize();
+        dimensions.add([alturaLargura[1], alturaLargura[0]]);
+        cordenadas = await persistence!.getCoordinatesImg();
+        amtImagens.add(cordenadas.length);
         retGetThumb = await persistence!.getThumbnailLayout();
         tumbnails.add(retGetThumb);
       }
@@ -73,7 +73,7 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
     await Future.delayed(const Duration(milliseconds: 500)); //tempo para troca de paginas
     await inserirTumbnails();
     if(items.isEmpty){
-      vazio = true;
+      empty = true;
     }
     load = false;
     setState(() {});
@@ -81,20 +81,20 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
 
   @override
   Widget build(BuildContext context) {
-    final tema = Provider.of<TemaAplicacao>(context);
+    final tema = Provider.of<AppThemePers>(context);
     final Size telaTamanho = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: tema.corDefundo,
+      backgroundColor: tema.bkgColor,
       appBar: AppBar(
         foregroundColor: Colors.white,
-        backgroundColor: tema.corBotoes,
-        title: Text(titulo),
+        backgroundColor: tema.buttonColor,
+        title: Text(title),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: deletarSelecionado,
-        backgroundColor: tema.corBotoes,
-        foregroundColor: tema.corDosIcones,
+        backgroundColor: tema.buttonColor,
+        foregroundColor: tema.iconsColor,
         child: const Icon(Icons.delete),
       ),
       body: Stack(children: [
@@ -110,7 +110,7 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
                       width: telaTamanho.width*0.7,
                       child: Image.asset('assets/images/loading_anm.gif'),
                     )),
-                    Text("Um instante...", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.07)),
+                    Text("Um instante...", style: TextStyle(color: tema.iconsColor, fontSize: telaTamanho.width*0.07)),
                   ],
                 ),
               )
@@ -123,23 +123,23 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
                 final item = items[index];
                 final isSelected = selectedItems.contains(item);
                 return CheckboxListTile(
-                  side: BorderSide(color: tema.corIconeBototesClaro),
+                  side: BorderSide(color: tema.lightButtonIconsColor),
                   contentPadding: const EdgeInsets.all(0),
                   secondary: IconButton(
                     onPressed: (){
-                      mudarNome(index);
+                      changeName(index);
                     },
-                    icon: Icon(Icons.edit, color: tema.corDaFonte,),
+                    icon: Icon(Icons.edit, color: tema.fontColor,),
                   ),
                   title: Container(
-                    color: isSelected? const Color.fromRGBO(0, 0, 200, 200) : tema.corDefundo,
+                    color: isSelected? const Color.fromRGBO(0, 0, 200, 200) : tema.bkgColor,
                     margin: EdgeInsets.only(bottom: telaTamanho.height*0.05),
                     alignment: Alignment.center,
                     child: Column(children: [
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: isSelected? Colors.blue : tema.corDefundo,  // Define a cor da borda
+                            color: isSelected? Colors.blue : tema.bkgColor,  // Define a cor da borda
                             width: 4,          // Define a largura da borda
                           ),
                         ),
@@ -147,15 +147,15 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
                         child: Image.memory(tumbnails[index], fit: BoxFit.contain),
                       ),
                       Text(
-                        '${persistence!.chaves[index]}',
-                        style: TextStyle(fontSize: 20.0, color: tema.corDaFonte),
+                        '${persistence!.keys[index]}',
+                        style: TextStyle(fontSize: 20.0, color: tema.fontColor),
                       ),
-                      Text("${dimencoes[index][0]} x ${dimencoes[index][1]} px \n"
-                          "~${(pxToCm(300, dimencoes[index][0])).toStringAsFixed(2)} x ${(pxToCm(300, dimencoes[index][1])).toStringAsFixed(2)} cm (300ppi)",
-                        style: TextStyle(fontSize: 17, color: tema.corDaFonte),
+                      Text("${dimensions[index][0]} x ${dimensions[index][1]} px \n"
+                          "~${(pxToCm(300, dimensions[index][0])).toStringAsFixed(2)} x ${(pxToCm(300, dimensions[index][1])).toStringAsFixed(2)} cm (300ppi)",
+                        style: TextStyle(fontSize: 17, color: tema.fontColor),
                         textAlign: TextAlign.center,
                       ),
-                      Text("Suporte para até ${qtdImagens[index]} imagen(s)", style: TextStyle(color: tema.corDaFonte),),
+                      Text("Suporte para até ${amtImagens[index]} imagen(s)", style: TextStyle(color: tema.fontColor),),
                     ],),
                   ),
                   value: isSelected,
@@ -167,11 +167,11 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
                         selectedItems.remove(item);
                       }
                       if(selectedItems.length > 1){
-                        titulo = '${selectedItems.length} itens selecionados';
+                        title = '${selectedItems.length} itens selecionados';
                       }else if(selectedItems.length == 1){
-                        titulo = '1 item selecionado';
+                        title = '1 item selecionado';
                       }else{
-                        titulo = 'Layouts salvos';
+                        title = 'Layouts salvos';
                       }
 
                     });
@@ -181,13 +181,18 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
             ),
           ),
         Visibility(
-          visible: vazio,
+          visible: empty,
           child: Container(
             padding:  EdgeInsets.all(telaTamanho.height*0.06),
               child: Column(
                 children: [
-                  Text("Não há layouts salvos aqui por enquanto.", style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.width*0.1),),
-                  TextButton(onPressed: ()=> Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const CriarNovoLayoutPage())), child: Text("Criar um layout?", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.09, decoration: TextDecoration.underline,),))
+                  Text("Não há layouts salvos aqui por enquanto.", style: TextStyle(color: tema.fontColor, fontSize: telaTamanho.width*0.1),),
+                  TextButton(
+                    onPressed: () => Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => const CreateNewLayoutPage())
+                    ),
+                    child: Text("Criar um layout?", style: TextStyle(color: tema.iconsColor, fontSize: telaTamanho.width*0.09, decoration: TextDecoration.underline))
+                  )
                 ],
               )
           ),
@@ -196,16 +201,16 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
     );
   }
 
-  Future<void> mudarNome(int index) async{
+  Future<void> changeName(int index) async{
     bool mudou = false;
     if(selectedItems.isEmpty){
-      await exibirTelaMudarNomeLayoutSalvo(
-          controlerNomeLayout: nomeLayoutControler,
+      await showChangeSavedLayoutName(
+          controlerNameLayout: nomeLayoutControler,
           context: context,
-          funcaoConfirmar: ()async{
+          confirmFunction: ()async{
             if(nomeLayoutControler.text.trim() != '' && nomeLayoutControler.text.trim() != items[index]){
               load = true;
-              mudou = await persistence!.mudarNomeChave(chave: items[index], novoNomeChave: nomeLayoutControler.text.trim());
+              mudou = await persistence!.changeKeyName(chave: items[index], newKeyName: nomeLayoutControler.text.trim());
               if(mudou){
                 items = [];
                 selectedItems = [];
@@ -234,10 +239,10 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
       }
 
       await showDialog(context: context, barrierDismissible: true ,builder: (context){
-        return SubTelaConfirmacao(
-          texto: texto,
-          subtexto: "Deseja proseguir e deletar?",
-          funcaoConfirmar: (){
+        return ConfirmDecisionDialog(
+          text: texto,
+          subtext: "Deseja proseguir e deletar?",
+          confirmFunction: (){
             Navigator.of(context).pop();
             deveDeletar = true;
           },
@@ -246,13 +251,13 @@ class _GerenciarLayoutsState extends State<GerenciarLayouts> {
 
       if(deveDeletar){
         for(int i=0; i<selectedItems.length; i++){
-          await persistence!.deletarPorChave(selectedItems[i]);
+          await persistence!.deleteByKey(selectedItems[i]);
         }
         items = [];
         selectedItems = [];
         tumbnails = [];
 
-        titulo = 'Layouts salvos';
+        title = 'Layouts salvos';
         deveDeletar = false;
         inicializar();
       }

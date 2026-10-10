@@ -3,29 +3,29 @@ import 'package:provider/provider.dart';
 
 import 'package:image_layout/application_theme_pers.dart';
 
-Future<void> exibirTelaMudarNomeLayoutSalvo({required TextEditingController controlerNomeLayout, required context, required VoidCallback funcaoConfirmar}) async{
+Future<void> showChangeSavedLayoutName({required TextEditingController controlerNameLayout, required context, required VoidCallback confirmFunction}) async{
   await showDialog(context: context, builder: (context){
-    return _NomeLayout(
-      controlerNomeLayout: controlerNomeLayout,
-      funcaoConfirmar: funcaoConfirmar,
+    return _ChangeLayoutNameDialog(
+      controlerNameLayout: controlerNameLayout,
+      confirmFunction: confirmFunction,
     );
   },);
 }
 
-class _NomeLayout extends StatelessWidget{
-  final TextEditingController controlerNomeLayout;
-  final VoidCallback funcaoConfirmar;
-  const _NomeLayout({required this.controlerNomeLayout, required this.funcaoConfirmar});
+class _ChangeLayoutNameDialog extends StatelessWidget{
+  final TextEditingController controlerNameLayout;
+  final VoidCallback confirmFunction;
+  const _ChangeLayoutNameDialog({required this.controlerNameLayout, required this.confirmFunction});
 
   @override
   Widget build(context) {
-    final tema = Provider.of<TemaAplicacao>(context);
+    final theme = Provider.of<AppThemePers>(context);
 
     return AlertDialog(
-          backgroundColor: tema.corDefundo,
+          backgroundColor: theme.bkgColor,
           contentPadding: const  EdgeInsets.all(0),
           title: Text('Novo nome:', textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22, color: tema.corDaFonte),),
+            style: TextStyle(fontSize: 22, color: theme.fontColor),),
           titlePadding: const EdgeInsets.only(top: 6, bottom: 6),
           content:Column(
             mainAxisSize: MainAxisSize.min,
@@ -34,14 +34,14 @@ class _NomeLayout extends StatelessWidget{
                 color: Colors.white10,
                 child: TextField(
                     decoration: const InputDecoration(border: OutlineInputBorder()),
-                    controller: controlerNomeLayout),
+                    controller: controlerNameLayout),
               ),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(onPressed: (){
-                    funcaoConfirmar();
+                    confirmFunction();
                     Navigator.of(context).pop();
                   },
                     style: ElevatedButton.styleFrom(

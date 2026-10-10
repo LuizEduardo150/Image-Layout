@@ -7,43 +7,41 @@ import 'package:image_layout/utils/enum_app_values.dart';
 import 'package:image_layout/application_theme_pers.dart';
 
 
-class CriarNovoLayoutPage extends StatefulWidget {
-  const CriarNovoLayoutPage({super.key});
+class CreateNewLayoutPage extends StatefulWidget {
+  const CreateNewLayoutPage({super.key});
 
   @override
-  State<CriarNovoLayoutPage> createState() => _CriarNovoLayoutPageState();
+  State<CreateNewLayoutPage> createState() => _CreateNewLayoutPageState();
 }
 
-class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
-  final TextEditingController _larguraController =
-  TextEditingController(); // usado para controlar os valores de entrada de texto para a largura e altura
-  final TextEditingController _alturaController = TextEditingController();
-  final TextEditingController _bordaController = TextEditingController();
-  String _selecionarUnidade = 'px';
-  bool _mostrarQualidade = false;
-
-
-  String _selecionarQualidade = 'Médio';
+class _CreateNewLayoutPageState extends State<CreateNewLayoutPage> {
+  
+  final TextEditingController _controllerWidth = TextEditingController(); // usado para controlar os valores de entrada de texto para a largura e altura
+  final TextEditingController _controllerHeight = TextEditingController();
+  final TextEditingController _controllerBorder = TextEditingController();
+  String _selectUnit = 'px';
+  bool _showQuality = false;
+  String _selectQuality = 'Médio';
 
   @override
   void dispose() {
     // libera a memória e evitar vazamentos de recursos quando o widget é destruído
-    _larguraController.dispose();
-    _alturaController.dispose();
-    _bordaController.dispose();
+    _controllerWidth.dispose();
+    _controllerHeight.dispose();
+    _controllerBorder.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final tema = Provider.of<TemaAplicacao>(context);
-    final Size telaTamanho = MediaQuery.of(context).size;
+    final theme = Provider.of<AppThemePers>(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: tema.corDefundo,
+      backgroundColor: theme.bkgColor,
       appBar: AppBar(
-        foregroundColor: tema.corDaFonte,
-        backgroundColor: tema.corBotoes,
+        foregroundColor: theme.fontColor,
+        backgroundColor: theme.buttonColor,
         elevation: 0.0,
         title: const Text('Definições do novo Layout'),
       ),
@@ -53,15 +51,15 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
           shrinkWrap: true,
           children: [
             DropdownButtonFormField<String>(
-              initialValue: _selecionarUnidade,
-              dropdownColor: tema.corDefundo,
+              initialValue: _selectUnit,
+              dropdownColor: theme.bkgColor,
               onChanged: (String? novoValor) {
                 setState(() {
-                  _selecionarUnidade = novoValor!;
+                  _selectUnit = novoValor!;
                   if (novoValor == 'px') {
-                    _mostrarQualidade = false;
+                    _showQuality = false;
                   } else {
-                    _mostrarQualidade = true;
+                    _showQuality = true;
                   }
                 });
               },
@@ -72,87 +70,87 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
                   .map<DropdownMenuItem<String>>((String valor) {
                 return DropdownMenuItem<String>(
                   value: valor,
-                  child: Text(valor, style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.height*0.02)),
+                  child: Text(valor, style: TextStyle(color: theme.fontColor, fontSize: screenSize.height*0.02)),
                 );
               }).toList(),
               decoration: InputDecoration(
                 labelText: 'Unidade',
-                labelStyle: TextStyle(color: tema.corDaFonte),
+                labelStyle: TextStyle(color: theme.fontColor),
                 border: const OutlineInputBorder(),
               ),
             ),
             const Padding(padding: EdgeInsets.all(10)),
             Visibility(
-                visible: _mostrarQualidade,
+                visible: _showQuality,
                 child: DropdownButtonFormField(
-                  initialValue: _selecionarQualidade,
-                  dropdownColor: tema.corDefundo,
+                  initialValue: _selectQuality,
+                  dropdownColor: theme.bkgColor,
                   onChanged: (String? novoValor) {
                     setState(() {
-                      _selecionarQualidade = novoValor!;
+                      _selectQuality = novoValor!;
                     });
                   },
                   items: [
                     DropdownMenuItem<String>(
                       value: "Mínimo",
-                      child: Text("Mínimo (100 PPI)", style: TextStyle(color: tema.corDaFonte)),
+                      child: Text("Mínimo (100 PPI)", style: TextStyle(color: theme.fontColor)),
                     ),
                     DropdownMenuItem<String>(
                       value: "Médio",
-                      child: Text("Médio (200 PPI)", style: TextStyle(color: tema.corDaFonte)),
+                      child: Text("Médio (200 PPI)", style: TextStyle(color: theme.fontColor)),
                     ),
                     DropdownMenuItem<String>(
                       value: "Alto",
-                      child: Text("Alto (300 PPI)", style: TextStyle(color: tema.corDaFonte)),
+                      child: Text("Alto (300 PPI)", style: TextStyle(color: theme.fontColor)),
                     ),
                     DropdownMenuItem<String>(
                       value: "Muito Alto",
-                      child: Text("Muito Alto (400PPI)", style: TextStyle(color: tema.corDaFonte)),
+                      child: Text("Muito Alto (400PPI)", style: TextStyle(color: theme.fontColor)),
                     ),
                   ],
                   decoration: InputDecoration(
                     labelText: 'Qualidade (PPI)',
-                    labelStyle: TextStyle(color: tema.corDaFonte, fontSize: 20),
+                    labelStyle: TextStyle(color: theme.fontColor, fontSize: 20),
                     border: const OutlineInputBorder(),
                   ),
                 )
             ),
             Visibility( //padding extra ao adicionar mais um campo
-                visible: _mostrarQualidade,
+                visible: _showQuality,
                 child:const Padding(padding: EdgeInsets.all(10))
             ),
             TextField(
-              controller: _larguraController,
-              style: TextStyle(color: tema.corDaFonte, fontSize: 20),
+              controller: _controllerWidth,
+              style: TextStyle(color: theme.fontColor, fontSize: 20),
               //  permite controlar o conteúdo do campo de texto e obter seu valor
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'Largura',
-                labelStyle: TextStyle(color: tema.corDaFonte, fontSize: 20),
+                labelStyle: TextStyle(color: theme.fontColor, fontSize: 20),
                 border: const OutlineInputBorder(), // define o estilo da borda ao redor do campo de texto
               ),
               textInputAction: TextInputAction.next,
             ),
             const Padding(padding: EdgeInsets.all(10)),
             TextField(
-              controller: _alturaController,
+              controller: _controllerHeight,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: tema.corDaFonte, fontSize: 20),
+              style: TextStyle(color: theme.fontColor, fontSize: 20),
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 labelText: 'Altura',
-                labelStyle: TextStyle(color: tema.corDaFonte, fontSize: 20),
+                labelStyle: TextStyle(color: theme.fontColor, fontSize: 20),
                 border: const OutlineInputBorder(),
               ),
             ),
             const Padding(padding: EdgeInsets.all(10)),
             TextField(
-              controller: _bordaController,
+              controller: _controllerBorder,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: tema.corDaFonte, fontSize: 20),
+              style: TextStyle(color: theme.fontColor, fontSize: 20),
               decoration: InputDecoration(
                 labelText: 'Borda (opcional)',
-                labelStyle: TextStyle(color: tema.corDaFonte, fontSize: 20),
+                labelStyle: TextStyle(color: theme.fontColor, fontSize: 20),
                 border: const OutlineInputBorder(),
               ),
               textInputAction: TextInputAction.done,
@@ -164,8 +162,8 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
               onPressed: _confirmarConfiguracoes,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-                foregroundColor: tema.corDosIcones,
-                backgroundColor: tema.corBotoes,
+                foregroundColor: theme.iconsColor,
+                backgroundColor: theme.buttonColor,
               ),
               child: const Text('Confirmar',
                 style: TextStyle(
@@ -181,38 +179,41 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
   }
 
   void _confirmarConfiguracoes() {
-    UnidadeDeMedida unidadedoc = UnidadeDeMedida.pixels;
-    Qualidade qualidadeDoc = Qualidade.media;
+    UnitOfMeasurement unidadedoc = UnitOfMeasurement.pixels;
+    Quality qualidadeDoc = Quality.medium;
     int? larguradoc;
     int? alturadoc;
     int? bordadoc;
 
-    if (_selecionarQualidade == 'Mínimo') {
-      qualidadeDoc = Qualidade.muitoBaixa;
-    } else if (_selecionarQualidade == 'Médio') {
-      qualidadeDoc = Qualidade.baixa;
-    } else if (_selecionarQualidade == 'Alto') {
-      qualidadeDoc = Qualidade.media;
-    } else if (_selecionarQualidade == 'Muito Alto') {
-      qualidadeDoc = Qualidade.alta;
+    if (_selectQuality == 'Mínimo') {
+      qualidadeDoc = Quality.verylow;
+    
+    } else if (_selectQuality == 'Médio') {
+      qualidadeDoc = Quality.low;
+    
+    } else if (_selectQuality == 'Alto') {
+      qualidadeDoc = Quality.medium;
+    
+    } else if (_selectQuality == 'Muito Alto') {
+      qualidadeDoc = Quality.high;
     }
 
 
-    if (_selecionarUnidade == 'px') {
+    if (_selectUnit == 'px') {
       //não é preciso fazer convercao para o editor de layouts
-      unidadedoc = UnidadeDeMedida.pixels;
-      larguradoc = stringParseInt(_larguraController.text.trim());
-      alturadoc = stringParseInt(_alturaController.text.trim());
-      bordadoc = stringParseInt(_bordaController.text.trim());
-    } else if (_selecionarUnidade == 'cm') {
+      unidadedoc = UnitOfMeasurement.pixels;
+      larguradoc = stringParseInt(_controllerWidth.text.trim());
+      alturadoc = stringParseInt(_controllerHeight.text.trim());
+      bordadoc = stringParseInt(_controllerBorder.text.trim());
+    } else if (_selectUnit == 'cm') {
       // é preciso fazer convercao para o editor de layouts
-      unidadedoc = UnidadeDeMedida.centimetros;
+      unidadedoc = UnitOfMeasurement.centimeters;
       larguradoc =
-          cmToPx(qualidadeDoc.getValorPPI(), _larguraController.text.trim());
+          cmToPx(qualidadeDoc.getValorPPI(), _controllerWidth.text.trim());
       alturadoc =
-          cmToPx(qualidadeDoc.getValorPPI(), _alturaController.text.trim());
+          cmToPx(qualidadeDoc.getValorPPI(), _controllerHeight.text.trim());
       bordadoc =
-          cmToPx(qualidadeDoc.getValorPPI(), _bordaController.text.trim());
+          cmToPx(qualidadeDoc.getValorPPI(), _controllerBorder.text.trim());
     }
 
     if (larguradoc == null || larguradoc == 0 || alturadoc == null || alturadoc == 0 || bordadoc == null) {
@@ -233,7 +234,7 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
         ),
       );
     } else {
-      _bordaController.text = '';
+      _controllerBorder.text = '';
       if(bordadoc >= larguradoc || bordadoc >= alturadoc){
         showDialog(
           context: context, // necessário para exibir o diálogo
@@ -251,7 +252,7 @@ class _CriarNovoLayoutPageState extends State<CriarNovoLayoutPage> {
           ),
         );
       }else{
-        EditorLayoutArgs args = EditorLayoutArgs(alturadoc, larguradoc, bordadoc, qualidadeDoc, unidadedoc);
+        LayoutEditorPageArgs args = LayoutEditorPageArgs(alturadoc, larguradoc, bordadoc, qualidadeDoc, unidadedoc);
         Navigator.pushNamedAndRemoveUntil(context, '/editorLayouts', arguments: args, ModalRoute.withName('/'));
       }
 

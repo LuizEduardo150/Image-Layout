@@ -12,45 +12,45 @@ import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
 import 'package:image_layout/application_theme_pers.dart';
 
 
-class EditorImagemArgs{
-  final int alturaDocumento;
-  final int larguraDocumento;
-  final List listaComPosicoesParaFotos;
+class ImageEditorPageArgs{
+  final int documentHeight;
+  final int documentWidth;
+  final List photoPositionsList;
 
-  EditorImagemArgs(this.alturaDocumento, this.larguraDocumento, this.listaComPosicoesParaFotos);
+  ImageEditorPageArgs(this.documentHeight, this.documentWidth, this.photoPositionsList);
 }
 
 
-class EditorDeImagem extends StatefulWidget {
+class ImageEditorPage extends StatefulWidget {
 
-  const EditorDeImagem({super.key});
+  const ImageEditorPage({super.key});
 
   @override
-  State<EditorDeImagem> createState() => _EditorDeImagemState();
+  State<ImageEditorPage> createState() => _ImageEditorPageState();
 }
 
-class _EditorDeImagemState extends State<EditorDeImagem> {
+class _ImageEditorPageState extends State<ImageEditorPage> {
 
-  EditorImagemArgs? argumentos;
-  ImagensLayoutEditor? _documento;
-  Uint8List? imagemView;
-  Color _corBotoesAdd = Colors.white;
-  late String nome;
-  String tituloSeletorCor = 'Selecione a cor';
-  Color corSelecionada = Colors.white;
+  ImageEditorPageArgs? args;
+  ImagensLayoutEditor? _document;
+  Uint8List? imageView;
+  Color _addButtonsColor = Colors.white;
+  late String name; // TODO: ver se precisa
+  String selectColorTittle = 'Selecione a cor';
+  Color selectedColor = Colors.white;
   bool load = true;
 
 
-  void carregar() async{
+  void loadPage() async{
     
     await Future.delayed(const Duration(milliseconds: 500));
-    _documento = ImagensLayoutEditor(
-        altura: argumentos!.alturaDocumento,
-        largura: argumentos!.larguraDocumento,
-        qtdFotos: argumentos!.listaComPosicoesParaFotos.length
+    _document = ImagensLayoutEditor(
+        height: args!.documentHeight,
+        width: args!.documentWidth,
+        amtPhotos: args!.photoPositionsList.length
     );
     
-    await _documento!.desenharLayoutPorPosicoes(argumentos!.listaComPosicoesParaFotos);
+    await _document!.drawLayoutByPositions(args!.photoPositionsList);
     
     setState(() {});
     
@@ -60,7 +60,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
       });
     });
     
-    imagemView = _documento!.getImagemView();
+    imageView = _document!.getImageView();
   }
 
   @override
@@ -74,9 +74,9 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
     super.didChangeDependencies();
 
-    if (argumentos == null){
-      argumentos = ModalRoute.of(super.context)!.settings.arguments as EditorImagemArgs;
-      carregar();
+    if (args == null){
+      args = ModalRoute.of(super.context)!.settings.arguments as ImageEditorPageArgs;
+      loadPage();
     }
   
   }
@@ -96,20 +96,20 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
   @override
   Widget build(BuildContext context) {
-    final tema = Provider.of<TemaAplicacao>(context);
-    final Size telaTamanho = MediaQuery.of(context).size;
+    final theme = Provider.of<AppThemePers>(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     void salvarDocumento() async{
-      bool res = await _documento!.salvarImagem('ImgLayout${DateTime.now().toString()}');
+      bool res = await _document!.saveImage('ImgLayout${DateTime.now().toString()}');
       if(res){
         showDialog(builder: (context) => AlertDialog(
-              backgroundColor: tema.corDefundo,
-              title: Text("Imagem salva na geleria do seu celular", style: TextStyle(color: tema.corDaFonte)),
+              backgroundColor: theme.bkgColor,
+              title: Text("Imagem salva na geleria do seu celular", style: TextStyle(color: theme.fontColor)),
               actions: [
                 Center(child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: tema.corIconeBototesClaro,
-                        backgroundColor: tema.corBotoes,
+                        foregroundColor: theme.lightButtonIconsColor,
+                        backgroundColor: theme.buttonColor,
                         elevation: 0
                       ),
                       onPressed: (){
@@ -123,16 +123,16 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
         );
       }
       else{
-        _exibirTelaErro("Erro inesperado ao tentar salvar a imagem na galeria.\nTente novamente mais tarde.", context);
+        _showErrorScreen("Erro inesperado ao tentar salvar a imagem na galeria.\nTente novamente mais tarde.", context);
       }
     }
 
     return Scaffold(
-      backgroundColor: tema.corDefundo,
+      backgroundColor: theme.bkgColor,
       appBar: AppBar(
-        title: Text("Inserir Imagens", style: TextStyle(fontSize: telaTamanho.width*0.05)),
+        title: Text("Inserir Imagens", style: TextStyle(fontSize: screenSize.width*0.05)),
         elevation: 0.0,
-        backgroundColor: tema.corBotoes,
+        backgroundColor: theme.buttonColor,
         foregroundColor: Colors.white,
         actions: <Widget>[
           IconButton( //pagina de ajuda
@@ -144,14 +144,14 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
           IconButton(//voltar para a home
               onPressed: ()async{
-                if(_documento!.getIndice() > 0){
+                if(_document!.getIndex() > 0){
                   bool ret = await _exibirTelaConfirmacaoVoltarParaHome(context);
                   if(ret){
-                    _voltarParaHome();
+                    _goBackHome();
                   }
                 }
                 else{
-                  _voltarParaHome();
+                  _goBackHome();
                 }
               },
             icon: const Icon(Icons.home)
@@ -159,73 +159,73 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
         ],
       ),
       drawer: Drawer(
-        backgroundColor: tema.corBotoes,
+        backgroundColor: theme.buttonColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("Configurações da\nferramenta de inserção",
-              style: TextStyle(color: tema.corDaFonte, fontWeight: FontWeight.bold, fontSize: telaTamanho.height*0.03),
+              style: TextStyle(color: theme.fontColor, fontWeight: FontWeight.bold, fontSize: screenSize.height*0.03),
               textAlign: TextAlign.center,
             ),
-            Padding(padding: EdgeInsets.only(top: telaTamanho.height*0.03)),
+            Padding(padding: EdgeInsets.only(top: screenSize.height*0.03)),
             Row(children: [
               IconButton(onPressed: (){
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      backgroundColor: tema.corBotoes,
-                      title: Text('Proporção do recorte', style: TextStyle(color: tema.corDaFonte)),
+                      backgroundColor: theme.buttonColor,
+                      title: Text('Proporção do recorte', style: TextStyle(color: theme.fontColor)),
                       content: Text('A proporção do recorte define o comportamento da ferramenta de recorte de imagem ao inserir uma nova imagem no layout. A proporção livre, permite você recortar a imagem da forma que quiser, mas poderá perder a qualidade da imagem. A proporção travada, garante que o formato de recorte da imagem obedeça às proporções da imagem ao inseri-la no espaço do layout.'
                       '\n\nEm outras palavras, o recorte livre pode gerar o efeito de “esticar sua imagem”, caso seja feito um recorte incondizente com o espaço onde a imagem deve ser inserida.',
-                        style: TextStyle(color: tema.corDaFonte),
+                        style: TextStyle(color: theme.fontColor),
                       ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Fechar', style: TextStyle(color: tema.corIconeBototesClaro),),
+                          child: Text('Fechar', style: TextStyle(color: theme.lightButtonIconsColor),),
                         ),
                       ],
                     );
                   },
                 );
-                }, icon: Icon(Icons.info_outline, color: tema.corFonteSecundaria,)),
-              Text("  Proporção do recorte:", style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.width*0.05)),
+                }, icon: Icon(Icons.info_outline, color: theme.secondFontColor,)),
+              Text("  Proporção do recorte:", style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.05)),
             ],),
 
             Container(
-                padding: EdgeInsets.only(left: telaTamanho.width*0.15),
+                padding: EdgeInsets.only(left: screenSize.width*0.15),
                 child: Column(children: [
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.travarProporcaoCroper();
+                            _document!.lockProportionCroper();
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(_documento!.getTravaProporcao()? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(_document!.getProportionLock()? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Travada', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Travada', style: TextStyle(color: theme.fontColor)),
                   ],),
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.destravarProporcaoCroper();
+                            _document!.unlockProportionCroper();
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(!_documento!.getTravaProporcao()? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(!_document!.getProportionLock()? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Livre', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Livre', style: TextStyle(color: theme.fontColor)),
                   ],),
                 ],)
             ),
 
-            Padding(padding: EdgeInsets.all(telaTamanho.height*0.01)),
+            Padding(padding: EdgeInsets.all(screenSize.height*0.01)),
 
             Row(children: [
               IconButton(onPressed: (){
@@ -233,76 +233,76 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      backgroundColor: tema.corBotoes,
-                      title: Text('Qualidade das imagens', style: TextStyle(color: tema.corDaFonte)),
+                      backgroundColor: theme.buttonColor,
+                      title: Text('Qualidade das imagens', style: TextStyle(color: theme.fontColor)),
                       content: Text("Aqui você define o comportamento do editor ao abrir uma imagem da sua galeria. No momento em que vai ser adicionado uma nova imagem, você pode preferir que a imagem seja aberta em sua máxima qualidade ou em qualidade reduzida. \nEssa opção pode ser útil caso seu aparelho não tenha bom desempenho ou caso seja antigo,a  medida que quanto maior a qualidade de imagem, mais o aplicativo irá demorar para abrir a imagem, recortá-la e inseri-la em seu layout.",
 
-                        style: TextStyle(color: tema.corDaFonte),
+                        style: TextStyle(color: theme.fontColor),
                       ),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text('Fechar', style: TextStyle(color: tema.corIconeBototesClaro),),
+                          child: Text('Fechar', style: TextStyle(color: theme.lightButtonIconsColor),),
                         ),
                       ],
                     );
                   },
                 );
-                }, icon: Icon(Icons.info_outline, color: tema.corFonteSecundaria,)),
-              Text("Qualidade das imagens:", style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.width*0.05)),
+                }, icon: Icon(Icons.info_outline, color: theme.secondFontColor,)),
+              Text("Qualidade das imagens:", style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.05)),
             ],),
             Container(
-                padding: EdgeInsets.only(left: telaTamanho.width*0.15),
+                padding: EdgeInsets.only(left: screenSize.width*0.15),
                 child: Column(children: [
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.setQualidadeDocumento(Qualidade.alta);
+                            _document!.setDocumentQuality(Quality.high);
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(_documento!.getQualidadeImagemGaleria() == Qualidade.alta ? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(_document!.getGaleryImageQuality() == Quality.high ? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Muito Alta', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Muito Alta', style: TextStyle(color: theme.fontColor)),
                   ],),
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.setQualidadeDocumento(Qualidade.media);
+                            _document!.setDocumentQuality(Quality.medium);
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(_documento!.getQualidadeImagemGaleria() == Qualidade.media ? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(_document!.getGaleryImageQuality() == Quality.medium ? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Alta', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Alta', style: TextStyle(color: theme.fontColor)),
                   ],),
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.setQualidadeDocumento(Qualidade.baixa);
+                            _document!.setDocumentQuality(Quality.low);
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(_documento!.getQualidadeImagemGaleria() == Qualidade.baixa ? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(_document!.getGaleryImageQuality() == Quality.low ? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Média', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Média', style: TextStyle(color: theme.fontColor)),
                   ],),
                   Row(children: [
                     IconButton(
                         onPressed: (){
                           setState(() {
-                            _documento!.setQualidadeDocumento(Qualidade.muitoBaixa);
+                            _document!.setDocumentQuality(Quality.verylow);
                           });
                         },
-                        icon: _documento == null? const Icon(Icons.access_alarm) :
-                          Icon(_documento!.getQualidadeImagemGaleria() == Qualidade.muitoBaixa ? Icons.radio_button_checked: Icons.radio_button_off, color: tema.corIconeBototesClaro)
+                        icon: _document == null? const Icon(Icons.access_alarm) :
+                          Icon(_document!.getGaleryImageQuality() == Quality.verylow ? Icons.radio_button_checked: Icons.radio_button_off, color: theme.lightButtonIconsColor)
                     ),
-                    Text('Baixa', style: TextStyle(color: tema.corDaFonte)),
+                    Text('Baixa', style: TextStyle(color: theme.fontColor)),
                   ],),
                 ],)
             ),
@@ -314,18 +314,20 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
           child: const Text(""),
           onPopInvoked: (bool didPop)async {
             if(didPop){return;}
-            if(_documento!.getIndice() > 0){
+            if(_document!.getIndex() > 0){
               bool ret = await _exibirTelaConfirmacaoVoltarParaHome(context);
               if(ret){
-                _voltarParaHome();
+                _goBackHome();
               }
             }
             else{
-              _voltarParaHome();
+              _goBackHome();
             }
           }
         ),
-        documentoImageView(),
+
+        documentImageView(),
+        
         Visibility(
             visible: load,
             child: Container(
@@ -333,12 +335,12 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(padding: EdgeInsets.symmetric(vertical: telaTamanho.height*0.1)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: screenSize.height*0.1)),
                   Center(child: SizedBox(
-                    width: telaTamanho.width*0.7,
+                    width: screenSize.width*0.7,
                     child: Image.asset('assets/images/loading_anm.gif'),
                   )),
-                  Text("Um instante...", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.07)),
+                  Text("Um instante...", style: TextStyle(color: theme.iconsColor, fontSize: screenSize.width*0.07)),
                 ],
               ),
             )
@@ -347,33 +349,33 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
       bottomNavigationBar: BottomAppBar(
         padding: const EdgeInsets.all(0),
-        color: tema.corBotoes,
+        color: theme.buttonColor,
         elevation: 0,
-        height: telaTamanho.height*0.07,
+        height: screenSize.height*0.07,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton( //ADD FOTO
               icon: const Icon(Icons.add_photo_alternate, size: 30),
-              color: _corBotoesAdd,
+              color: _addButtonsColor,
               onPressed: (){
-                _addImagemGaleria(tema);
+                _addGaleryImage(theme);
               }
             ),
             IconButton(
-                onPressed: ()=> mudarCorDeFundo(tema), icon: const Icon(Icons.space_dashboard_outlined, color: Colors.white,)
+                onPressed: ()=> changeBkgColor(theme), icon: const Icon(Icons.space_dashboard_outlined, color: Colors.white)
             ),
             IconButton(
-                onPressed: () => _preencherEspacoAtualComCor(tema),
-                icon: Icon(Icons.format_color_fill_outlined, size: 28, color: _corBotoesAdd)
+                onPressed: () => _fillCurrentSpaceWithColor(theme),
+                icon: Icon(Icons.format_color_fill_outlined, size: 28, color: _addButtonsColor)
             ),
             IconButton(
               icon: const Icon(Icons.undo, color: Colors.white),
-              onPressed: _desfazerUmaAcao,
+              onPressed: _undoOneAction,
             ),
             IconButton(
                 icon: const Icon(Icons.delete_forever_rounded, color: Colors.white),
-                onPressed: _removerTodasAsFotos
+                onPressed: _removeAllImages
             ),
             IconButton(
               icon: const Icon(Icons.save, color: Colors.white),
@@ -386,19 +388,20 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
 
   }
 
-  void mudarCorDeFundo(TemaAplicacao tema)async{
-    tituloSeletorCor = 'Mudar cor de fundo:';
-    corSelecionada = _documento!.getCorDeFundo();
-    Color cor = await colorPicker(tema);
-    if(cor != Colors.transparent){
+  void changeBkgColor(AppThemePers theme)async{
+    selectColorTittle = 'Mudar cor de fundo:';
+    selectedColor = _document!.getBkgColor();
+    Color color = await colorPicker(theme);
+
+    if(color != Colors.transparent){
       await Future.delayed(const Duration(milliseconds: 150));
       setState(() {
         load = true;
       });
-      corSelecionada = cor;
-      _documento!.setCorDeFundo(corSelecionada);
-      await _documento!.mudarCorDeFundo(argumentos!.listaComPosicoesParaFotos, corSelecionada);
-      imagemView = _documento!.getImagemView();
+      selectedColor = color;
+      _document!.setBkgColor(selectedColor);
+      await _document!.changeBackgroundColor(args!.photoPositionsList, selectedColor);
+      imageView = _document!.getImageView();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           load = false;
@@ -407,25 +410,25 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
     }
   }
 
-  Widget documentoImageView(){
+  Widget documentImageView(){
     if(load){
       return const Text('');
     }else{
       return ListView( //Exibicao do documento sendo criado
         shrinkWrap: true,
         padding: const EdgeInsets.all(4),
-        children: [Image.memory(imagemView!)]
+        children: [Image.memory(imageView!)]
       );
     }
   }
 
-  Future<Color> colorPicker(TemaAplicacao tema) async{
+  Future<Color> colorPicker(AppThemePers theme) async{
     final Color newColor = await showColorPickerDialog( // TODO dando erro aqui
       context,
-      corSelecionada,
-      title: Text(tituloSeletorCor,
-          style: TextStyle(color: tema.corDaFonte)),
-      backgroundColor: tema.corDefundo,
+      selectedColor,
+      title: Text(selectColorTittle,
+          style: TextStyle(color: theme.fontColor)),
+      backgroundColor: theme.bkgColor,
       spacing: 0,
       enableOpacity: false,
       showColorCode: false,
@@ -442,7 +445,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
       ),
     );
 
-    if(corSelecionada == newColor){
+    if(selectedColor == newColor){
       return Colors.transparent;
     }else{
       return newColor;
@@ -451,16 +454,16 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
   }
 
 
-  void _addImagemGaleria(TemaAplicacao tema) async{
-    if(_documento!.possuiEspaco()){
+  void _addGaleryImage(AppThemePers theme) async{
+    if(_document!.canInsert()){
       setState(() {
         load = true;
       });
-      bool ret = await _documento!.addImagemGaleria(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], tema);
+      bool ret = await _document!.addGaleryImage(args!.photoPositionsList[_document!.getIndex()], theme);
 
       if(ret == true){
         setState(() {
-          imagemView = _documento!.getImagemView();
+          imageView = _document!.getImageView();
         });
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
@@ -468,7 +471,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
           });
         });
         //se acabaram os espacos, o botao deve ficar desabilitado
-        if(!_documento!.possuiEspaco()){_corBotoesAdd = Colors.white10;}
+        if(!_document!.canInsert()){_addButtonsColor = Colors.white10;}
       }else{
         await Future.delayed(const Duration(milliseconds: 100)); //tempo para sair do menu do croper para o editor
         setState(() {
@@ -478,60 +481,60 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
     }
   }
 
-  void _preencherEspacoAtualComCor(TemaAplicacao tema)async {
-    if(_documento!.possuiEspaco()){
+  void _fillCurrentSpaceWithColor(AppThemePers theme)async {
+    if(_document!.canInsert()){
       await showDialog(context: context, builder: (context){
 
-        addComCorDeFundo()async{
+        addWithBkgColor()async{
           Navigator.of(context).pop();
           setState(() {
             load = true;
           });
           await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
           setState(() {
-            _documento!.preencherEspacoAtualComCor(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], _documento!.getCorDeFundo());
-            imagemView = _documento!.getImagemView();
+            _document!.fillCurrentSpaceWithColor(args!.photoPositionsList[_document!.getIndex()], _document!.getBkgColor());
+            imageView = _document!.getImageView();
             load = false;
           });
-          if(!_documento!.possuiEspaco()){//acabaram os espacos, botao fica desabilitado
-            _corBotoesAdd = Colors.white10;
+          if(!_document!.canInsert()){//acabaram os espacos, botao fica desabilitado
+            _addButtonsColor = Colors.white10;
           }
         }
 
-        addEscolhendoCor()async{
+        addSelectingColor() async{
           Navigator.of(context).pop();
-          tituloSeletorCor = 'Escolha uma cor:';
-          corSelecionada = Colors.transparent;
-          Color cor = await colorPicker(tema);
+          selectColorTittle = 'Escolha uma cor:';
+          selectedColor = Colors.transparent;
+          Color cor = await colorPicker(theme);
           if(cor != Colors.transparent){
             setState(() {
               load = true;
             });
             await Future.delayed(const Duration(milliseconds: 200)); //tempo para fechar tela e abrir loading
-            corSelecionada = cor;
+            selectedColor = cor;
             setState(() {
-              _documento!.preencherEspacoAtualComCor(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()], cor);
-              imagemView = _documento!.getImagemView();
+              _document!.fillCurrentSpaceWithColor(args!.photoPositionsList[_document!.getIndex()], cor);
+              imageView = _document!.getImageView();
               load = false;
             });
-            if(!_documento!.possuiEspaco()){//acabaram os espacos, botao fica desabilitado
-              _corBotoesAdd = Colors.white10;
+            if(!_document!.canInsert()){//acabaram os espacos, botao fica desabilitado
+              _addButtonsColor = Colors.white10;
             }
           }
         }
 
         return AlertDialog(
-          backgroundColor: tema.corDefundo,
-          title: Text("Preencher espaço atual:", style: TextStyle(color: tema.corDaFonte)),
+          backgroundColor: theme.bkgColor,
+          title: Text("Preencher espaço atual:", style: TextStyle(color: theme.fontColor)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ElevatedButton(onPressed: addComCorDeFundo,
-                style: ElevatedButton.styleFrom(foregroundColor: tema.corDaFonte, backgroundColor: tema.corBotoes),
+              ElevatedButton(onPressed: addWithBkgColor,
+                style: ElevatedButton.styleFrom(foregroundColor: theme.fontColor, backgroundColor: theme.buttonColor),
                 child: const Text("Pintar com cor de fundo"),
               ),
-              ElevatedButton(onPressed: addEscolhendoCor,
-                style: ElevatedButton.styleFrom(foregroundColor: tema.corDaFonte, backgroundColor: tema.corBotoes),
+              ElevatedButton(onPressed: addSelectingColor,
+                style: ElevatedButton.styleFrom(foregroundColor: theme.fontColor, backgroundColor: theme.buttonColor),
                 child: const Text("Pintar com outra cor"),
               ),
             ],
@@ -539,7 +542,7 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
           actions: [
             Center(
               child: ElevatedButton(onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(foregroundColor: tema.corDaFonte, backgroundColor: tema.corBotoes), child: const Text("Cancelar"),
+                style: ElevatedButton.styleFrom(foregroundColor: theme.fontColor, backgroundColor: theme.buttonColor), child: const Text("Cancelar"),
               ),
             ),
           ],
@@ -548,23 +551,23 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
     }
   }
 
-  void _removerTodasAsFotos(){
-    if(_documento!.getIndice() != 0){
+  void _removeAllImages(){
+    if(_document!.getIndex() != 0){
       showDialog(context: context, barrierDismissible: true ,builder: (context){
-        return SubTelaConfirmacao(
-          texto: "Deseja realmente deletar todas as imagens inseridas?\nEssa ação é irreversível.",
-          subtexto: "Deseja realmente prosseguir com a escolha?",
-          funcaoConfirmar: ()async{
+        return ConfirmDecisionDialog(
+          text: "Deseja realmente deletar todas as imagens inseridas?\nEssa ação é irreversível.",
+          subtext: "Deseja realmente prosseguir com a escolha?",
+          confirmFunction: ()async{
             Navigator.of(context).pop();
-            if(_documento!.possuiEspaco() == false){
-              _corBotoesAdd = Colors.white;
+            if(_document!.canInsert() == false){
+              _addButtonsColor = Colors.white;
             }
             setState(() {
               load = true;
             });
             await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
-            _documento!.clearAllRedesenhar(argumentos!.listaComPosicoesParaFotos);
-            imagemView = _documento!.getImagemView();
+            _document!.clearAll(args!.photoPositionsList);
+            imageView = _document!.getImageView();
             setState(() {
               load = false;
             });
@@ -576,23 +579,23 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
   }
 
 
-  void _desfazerUmaAcao()async{
-    if(_documento!.getIndice() != 0){ //ha alteracoes para serem desfeitas
+  void _undoOneAction()async{
+    if(_document!.getIndex() != 0){ //ha alteracoes para serem desfeitas
       setState(() {
         load = true;
       });
       await Future.delayed(const Duration(milliseconds: 200)); //tempo para abrir loading
-      if(_documento!.possuiEspaco()){//caso o indice for para proxima posicao
-        _documento!.desfazerUmaAcao(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()-1]);
-        imagemView = _documento!.getImagemView();
+      if(_document!.canInsert()){//caso o indice for para proxima posicao
+        _document!.undoOneAction(args!.photoPositionsList[_document!.getIndex()-1]);
+        imageView = _document!.getImageView();
       }
       else {//indice ja aponta para ultima posicao pois tinha acabado o espaco
-        _documento!.desfazerUmaAcao(argumentos!.listaComPosicoesParaFotos[_documento!.getIndice()]);
-        _corBotoesAdd = Colors.white;
-        imagemView = _documento!.getImagemView();
+        _document!.undoOneAction(args!.photoPositionsList[_document!.getIndex()]);
+        _addButtonsColor = Colors.white;
+        imageView = _document!.getImageView();
       }
-      if(_documento!.possuiEspaco() == false){ //tinha acabado o espaco, agora tem mais 1
-        _corBotoesAdd = Colors.white;
+      if(_document!.canInsert() == false){ //tinha acabado o espaco, agora tem mais 1
+        _addButtonsColor = Colors.white;
       }
       setState(() {
         load = false;
@@ -601,25 +604,25 @@ class _EditorDeImagemState extends State<EditorDeImagem> {
   }
 
 
-  void _exibirTelaErro(String textoErro, context){
+  void _showErrorScreen(String textoErro, context){
     showDialog(context: context, builder: (context){
-      return AlertaErroDialogBox(
-        texto: textoErro,
+      return ErrorAlertDialogBox(
+        text: textoErro,
       );
     },);
   }
 
-  void _voltarParaHome(){
+  void _goBackHome(){
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   Future<bool> _exibirTelaConfirmacaoVoltarParaHome(context) async{
     bool ret = false;
     await showDialog(context: context, builder: (context){
-      return SubTelaConfirmacao(
-        texto: "Existem fotos inseridas no documento. Não será possível recuparar depois as modificações feita no documento.",
-        subtexto: "Deseja voltar para a página inicial mesmo assim?",
-        funcaoConfirmar: (){
+      return ConfirmDecisionDialog(
+        text: "Existem fotos inseridas no documento. Não será possível recuparar depois as modificações feita no documento.",
+        subtext: "Deseja voltar para a página inicial mesmo assim?",
+        confirmFunction: (){
           Navigator.of(context).pop();
           ret = true;
         }

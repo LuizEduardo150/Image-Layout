@@ -8,85 +8,88 @@ import 'package:image_layout/utils/utils.dart';
 import 'package:image_layout/application_theme_pers.dart';
 
 
-class NovoLayoutPredefinido extends StatefulWidget {
-  const NovoLayoutPredefinido({super.key});
+class ChooseSavedLayouts extends StatefulWidget {
+  const ChooseSavedLayouts({super.key});
 
   @override
-  State<NovoLayoutPredefinido> createState() => _NovoLayoutPredefinidoState();
+  State<ChooseSavedLayouts> createState() => _ChooseSavedLayoutsState();
 }
 
-class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
+class _ChooseSavedLayoutsState extends State<ChooseSavedLayouts> {
 
   ///controle da pagina
-  int _selecionarItem = -1; // índice do item selecionado
+  int _selectItem = -1; // índice do item selecionado
   bool load = true;
   LayoutPersistence? persistence;
-  bool vazio = false;
+  bool empty = false;
 
   ///elementos visuais
   List<Uint8List> tumbnails = [];
-  List dimencoes = [];
-  List qtdImagensSuportadas = [];
+  List dimensions = [];
+  List supportedImagesNumberList = [];
 
   @override
   void initState(){
     super.initState();
     persistence = LayoutPersistence();
-    inicializar();
+    initialize();
   }
 
-  void inicializar() async{
-    await persistence!.carregarChaves();
+  void initialize() async{
+    await persistence!.loadKeys();
     Uint8List retGetThumb;
-    List alturaLargura;
-    List cordenadas;
+    List shape;
+    List coordinates;
 
-    inserirThumbnails()async{
-      for(int i=0; i< persistence!.chaves.length; i++){
-        persistence!.nome = persistence!.chaves[i];
-        alturaLargura = await persistence!.getTamanhoDocumento();
-        dimencoes.add([alturaLargura[1], alturaLargura[0]]);
-        cordenadas = await persistence!.getCoordenadasImg();
-        qtdImagensSuportadas.add(cordenadas.length);
+    insertThumbnails()async{
+      for(int i=0; i< persistence!.keys.length; i++){
+        persistence!.name = persistence!.keys[i];
+        shape = await persistence!.getDocumentSize();
+        dimensions.add([shape[1], shape[0]]);
+        coordinates = await persistence!.getCoordinatesImg();
+        supportedImagesNumberList.add(coordinates.length);
         retGetThumb = await persistence!.getThumbnailLayout();
         tumbnails.add(retGetThumb);
       }
     }
 
     await Future.delayed(const Duration(milliseconds: 500)); //tempo para troca de paginas
-    await inserirThumbnails();
+    await insertThumbnails();
+    
     load = false;
+    
     if(tumbnails.isEmpty){
-      vazio = true;
+      empty = true;
     }
-    setState(() {});
 
+    setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {
-    final tema = Provider.of<TemaAplicacao>(context);
-    final Size telaTamanho = MediaQuery.of(context).size;
+    final tema = Provider.of<AppThemePers>(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     void confirmarEscolha() async{
-      if (_selecionarItem != -1) {
-        persistence!.nome = persistence!.chaves[_selecionarItem];
-        List coordenadas = await persistence!.getCoordenadasImg();
-        irParaEditor(coordenadas);
+      if (_selectItem != -1) {
+        persistence!.name = persistence!.keys[_selectItem];
+        List coordinates = await persistence!.getCoordinatesImg();
+        irParaEditor(coordinates);
       } else {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              backgroundColor: tema.corBotoes,
+              backgroundColor: tema.buttonColor,
               title: const Text('Erro', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
-              content: Text('Selecione um layout antes de continuar.', style: TextStyle(color: tema.corDaFonte)),
+              content: Text('Selecione um layout antes de continuar.', style: TextStyle(color: tema.fontColor)),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('OK', style: TextStyle(color: tema.corDaFonte)),
+                  child: Text('OK', style: TextStyle(color: tema.fontColor)),
                 ),
               ],
             );
@@ -96,9 +99,9 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
     }
 
     return Scaffold(
-      backgroundColor: tema.corDefundo,
+      backgroundColor: tema.bkgColor,
       appBar: AppBar(
-        backgroundColor: tema.corBotoes,
+        backgroundColor: tema.buttonColor,
         foregroundColor: Colors.white,
         title: const Text('Seus Layouts'),
       ),
@@ -110,12 +113,12 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Padding(padding: EdgeInsets.symmetric(vertical: telaTamanho.height*0.1)),
+                  Padding(padding: EdgeInsets.symmetric(vertical: screenSize.height*0.1)),
                   Center(child: SizedBox(
-                    width: telaTamanho.width*0.7,
+                    width: screenSize.width*0.7,
                     child: Image.asset('assets/images/loading_anm.gif'),
                   )),
-                  Text("Um instante...", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.07)),
+                  Text("Um instante...", style: TextStyle(color: tema.iconsColor, fontSize: screenSize.width*0.07)),
                 ],
               ),
             )
@@ -126,13 +129,13 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
               children: [
                 Expanded(child: GridView.count(
                   crossAxisCount: 1,
-                  children: List.generate(persistence!.getQtdDeLayoutsSalvos(), (index) {
-                    final isSelecionado = _selecionarItem == index;
+                  children: List.generate(persistence!.getAmtSavedLayouts(), (index) {
+                    final isSelecionado = _selectItem == index;
 
                     return InkWell(
                       onTap: () {
                         setState(() {
-                          _selecionarItem = index;
+                          _selectItem = index;
                         });
                       },
                       child: Column(children: [
@@ -145,22 +148,22 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
                           ),
                           child: Column(children: [
                             SizedBox(
-                              height: telaTamanho.height*0.3,
+                              height: screenSize.height*0.3,
                               child: Image.memory(tumbnails[index], fit: BoxFit.contain),
                             ),
                           ],)
                         ),
                         Text(
-                          '${persistence!.chaves[index]}',
-                          style: TextStyle(fontSize: 20.0, color: tema.corDaFonte),
+                          '${persistence!.keys[index]}',
+                          style: TextStyle(fontSize: 20.0, color: tema.fontColor),
                         ),
                         const Padding(padding: EdgeInsets.all(3)),
-                        Text("${dimencoes[index][0]} x ${dimencoes[index][1]} px \n"
-                            "~${(pxToCm(300, dimencoes[index][0])).toStringAsFixed(2)} x ${(pxToCm(300, dimencoes[index][1])).toStringAsFixed(2)} cm (300ppi)",
-                            style: TextStyle(fontSize: telaTamanho.width*0.02, color: tema.corDaFonte),
+                        Text("${dimensions[index][0]} x ${dimensions[index][1]} px \n"
+                            "~${(pxToCm(300, dimensions[index][0])).toStringAsFixed(2)} x ${(pxToCm(300, dimensions[index][1])).toStringAsFixed(2)} cm (300ppi)",
+                            style: TextStyle(fontSize: screenSize.width*0.02, color: tema.fontColor),
                             textAlign: TextAlign.center,
                         ),
-                        Text("Suporte para até ${qtdImagensSuportadas[index]} imagens", style: TextStyle(color: tema.corDaFonte),),
+                        Text("Suporte para até ${supportedImagesNumberList[index]} imagens", style: TextStyle(color: tema.fontColor),),
                     ],),
                     );
                   }),
@@ -169,14 +172,14 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
             ),
           ),
         Visibility(
-          visible: vazio,
+          visible: empty,
           child: Container(
-              padding:  EdgeInsets.all(telaTamanho.height*0.06),
+              padding:  EdgeInsets.all(screenSize.height*0.06),
               child: Column(
                 children: [
-                  Text("Não há layouts salvos aqui por enquanto.", style: TextStyle(color: tema.corDaFonte, fontSize: telaTamanho.width*0.1),),
+                  Text("Não há layouts salvos aqui por enquanto.", style: TextStyle(color: tema.fontColor, fontSize: screenSize.width*0.1),),
                   TextButton(
-                      child: Text("Criar um layout?", style: TextStyle(color: tema.corDosIcones, fontSize: telaTamanho.width*0.09, decoration: TextDecoration.underline)),
+                      child: Text("Criar um layout?", style: TextStyle(color: tema.iconsColor, fontSize: screenSize.width*0.09, decoration: TextDecoration.underline)),
                       onPressed: () => Navigator.pushNamed(context, '/criarNovoLayout')
                   )
                 ],
@@ -188,15 +191,15 @@ class _NovoLayoutPredefinidoState extends State<NovoLayoutPredefinido> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: confirmarEscolha,
-        backgroundColor: tema.corBotoes,
-        foregroundColor: tema.corDosIcones,
+        backgroundColor: tema.buttonColor,
+        foregroundColor: tema.iconsColor,
         child: const Icon(Icons.arrow_forward_ios),
       ),
     );
   }
 
   void irParaEditor(List posicoes){
-    EditorImagemArgs argumentos = EditorImagemArgs(dimencoes[_selecionarItem][0], dimencoes[_selecionarItem][1], posicoes);
+    ImageEditorPageArgs argumentos = ImageEditorPageArgs(dimensions[_selectItem][0], dimensions[_selectItem][1], posicoes);
     Navigator.pushNamed(context, "/editorImagens", arguments: argumentos);
   }
 
