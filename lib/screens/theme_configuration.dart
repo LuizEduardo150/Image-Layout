@@ -20,12 +20,14 @@ class _ThemeConfigurationState extends State<ThemeConfiguration> {
 
     return Scaffold(
       backgroundColor: theme.bkgColor,
+
       appBar: AppBar(
         foregroundColor: Colors.white,
         elevation: 0.0,
         backgroundColor: theme.buttonColor,
         title: const Text('Defina o theme:'),
       ),
+      
       body: ListView(children: [
         ListTile(
           title: Text('Claro (Img Layout)', style: TextStyle(color: theme.fontColor)),
@@ -107,10 +109,10 @@ class _ThemeConfigurationState extends State<ThemeConfiguration> {
               const Icon(Icons.square_outlined, color: Colors.white),
               Padding(padding: EdgeInsets.only(left: screenSize.width*0.1)),
               const Icon(Icons.square_outlined, color: Colors.white),
-            ],)
-        ),
+            ])
+        )
 
-      ],),
+      ])
     );
   }
 }

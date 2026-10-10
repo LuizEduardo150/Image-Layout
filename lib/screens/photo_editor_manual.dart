@@ -13,15 +13,18 @@ class HelpEditorFotos extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: theme.bkgColor,
+      
       appBar: AppBar(
         foregroundColor: Colors.white,
         title: const Text("Manual Inserir Fotos"),
         elevation: 0.0,
         backgroundColor: Colors.black87,
       ),
+      
       body: ListView(
         padding: const EdgeInsets.only(right: 10, left: 10),
         children: [
+          
           Text("\t\t\t\tA função de inserir fotos, permite a inserção de fotos, ocupando os epaços para fotos dos layouts.",
             softWrap: true,
             style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
@@ -112,7 +115,7 @@ class HelpEditorFotos extends StatelessWidget {
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.save, color: Colors.white,))
             ),
             Text("SALVAR IMAGEM\nNA GALERIA", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
+          ]),
 
           const Padding(padding: EdgeInsets.all(30)),
           Text('Na parte superior da tela também há botões de opções, e são eles:',
@@ -154,9 +157,9 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: TextDecoration.underline,
                 color: theme.secondFontColor,
               )
-            ),
+            )
           )
-        ],),
+        ])
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:image_layout/persistence/layout_persistence.dart';
 import 'package:image_layout/utils/utils.dart';
 import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
 import 'package:image_layout/screens/sub_screen/change_saved_layout_name.dart';
-import 'package:image_layout/screens/sub_screen/alerta_erro.dart';
+import 'package:image_layout/screens/sub_screen/error_alert.dart';
 import 'package:image_layout/screens/create_new_layout.dart';
 
 
@@ -36,6 +36,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
   bool empty = false;
   bool load = true;
 
+
   void exibirTelaErro(String textoErro){
     showDialog(context: context, builder: (context){
       return ErrorAlertDialogBox(
@@ -44,14 +45,16 @@ class _ManageLayoutsState extends State<ManageLayouts> {
     },);
   }
   
+
   @override
   void initState(){
     persistence = LayoutPersistence();
     super.initState();
-    inicializar();
+    startPage();
   }
 
-  Future<void> inicializar() async{
+
+  Future<void> startPage() async{
     await persistence!.loadKeys();
     List alturaLargura;
     List cordenadas;
@@ -79,6 +82,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
     setState(() {});
   }
 
+
   @override
   Widget build(BuildContext context) {
     final tema = Provider.of<AppThemePers>(context);
@@ -92,7 +96,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
         title: Text(title),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: deletarSelecionado,
+        onPressed: deleteSelected,
         backgroundColor: tema.buttonColor,
         foregroundColor: tema.iconsColor,
         child: const Icon(Icons.delete),
@@ -201,6 +205,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
     );
   }
 
+
   Future<void> changeName(int index) async{
     bool mudou = false;
     if(selectedItems.isEmpty){
@@ -216,7 +221,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
                 selectedItems = [];
                 tumbnails = [];
                 nomeLayoutControler.text = '';
-                inicializar();
+                startPage();
               }else{
                 exibirTelaErro("Não foi possível alterar o nome do layout pelo especificado, pois já existem outros atributos com esse nome, ou foi inserido um nome inválido.");
                 nomeLayoutControler.text = '';
@@ -228,7 +233,8 @@ class _ManageLayoutsState extends State<ManageLayouts> {
     }
   }
 
-  Future<void> deletarSelecionado()async{
+
+  Future<void> deleteSelected()async{
     bool deveDeletar = false;
     if(selectedItems.isNotEmpty){
       String texto;
@@ -259,7 +265,7 @@ class _ManageLayoutsState extends State<ManageLayouts> {
 
         title = 'Layouts salvos';
         deveDeletar = false;
-        inicializar();
+        startPage();
       }
     }
   }

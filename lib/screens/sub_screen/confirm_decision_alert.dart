@@ -18,6 +18,7 @@ class ConfirmDecisionDialog extends StatelessWidget{
       scrollable: true,
       backgroundColor: theme.buttonColor,
       contentPadding: const EdgeInsets.all(5),
+      titlePadding: const EdgeInsets.all(10),
 
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +27,6 @@ class ConfirmDecisionDialog extends StatelessWidget{
           const Text("  Atenção", style: TextStyle(fontSize: 30, color: Colors.amber), textAlign: TextAlign.center),
         ],
       ),
-      titlePadding: const EdgeInsets.all(10),
       
       content: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: theme.bkgColor),
@@ -51,35 +51,38 @@ class ConfirmDecisionDialog extends StatelessWidget{
         )
       ),
 
-        actions: [Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            
-            children: [
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          
+          children: [
 
-              ElevatedButton(onPressed: confirmFunction,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.only(right: 20, left: 20),
-                    backgroundColor: theme.buttonColor,
-                    elevation: 0, // Removendo a sombra
-                  ),
-                  child: Text("SIM", style: TextStyle(fontSize: 18, color: theme.iconsColor)),
-                ),
+            ElevatedButton(onPressed: confirmFunction,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.only(right: 20, left: 20),
+                backgroundColor: theme.buttonColor,
+                elevation: 0, // Removendo a sombra
+              ),
+              
+              child: Text("SIM", style: TextStyle(fontSize: 18, color: theme.iconsColor)),
+            ),
 
-                const Padding(padding: EdgeInsets.only(right: 25)),
+            const Padding(padding: EdgeInsets.only(right: 25)),
                 
-                ElevatedButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.only(right: 20, left: 20),
-                    backgroundColor: theme.buttonColor,
-                    elevation: 0, // Removendo a sombra
-                  ),
-                  child: Text("NÃO", style: TextStyle(fontSize: 18, color: theme.lightButtonIconsColor)),
-                ),
-            ]
-        )],
+            ElevatedButton(
+              onPressed: (){ Navigator.of(context).pop(); },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.only(right: 20, left: 20),
+                backgroundColor: theme.buttonColor,
+                elevation: 0, // Removendo a sombra
+              ),
+              child: Text("NÃO", style: TextStyle(fontSize: 18, color: theme.lightButtonIconsColor)),
+            )
+          
+          ]
+
+        )
+      ]
         
     );
   }

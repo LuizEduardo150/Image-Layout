@@ -33,7 +33,7 @@ enum Quality{
   verylow,
 }
 
-extension QualidadeExtensions on Quality {
+extension QualityExtensions on Quality {
   int getValorPPI() {
     switch (this) {
       case Quality.high:

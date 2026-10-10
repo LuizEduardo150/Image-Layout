@@ -14,6 +14,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+
 class _HomeState extends State<Home> {
   bool loaded = false;
   
@@ -34,6 +35,7 @@ class _HomeState extends State<Home> {
       loaded = true;
     }
   }
+
 
   @override
   Widget build(context) {
@@ -91,12 +93,12 @@ class _HomeState extends State<Home> {
                 }, // fecha o aplicativo, funciona apenas no Android,
               title: Column(children: [
                 Icon(Icons.exit_to_app, color: theme.iconsColor, size: 50,),
-                Text("Sair do aplicativo", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold),)
-              ],),
+                Text("Sair do aplicativo", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold))
+              ])
           ),
 
-          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
-        ],),
+          Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1))
+        ])
       ),
 
       body: ListView(children: [
@@ -203,11 +205,11 @@ class _HomeState extends State<Home> {
               enableInfiniteScroll: true,
               autoPlayInterval: const Duration(seconds: 5), // Intervalo entre as imagens
               autoPlayCurve: Curves.easeInOutBack,
-            ),
+            )
           ),
 
           const Padding(padding: EdgeInsets.all(30))
-      ],),
+      ])
     );
   } //final build method
 }

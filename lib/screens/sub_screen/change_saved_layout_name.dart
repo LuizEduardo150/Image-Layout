@@ -9,7 +9,7 @@ Future<void> showChangeSavedLayoutName({required TextEditingController controler
       controlerNameLayout: controlerNameLayout,
       confirmFunction: confirmFunction,
     );
-  },);
+  });
 }
 
 class _ChangeLayoutNameDialog extends StatelessWidget{
@@ -25,8 +25,9 @@ class _ChangeLayoutNameDialog extends StatelessWidget{
           backgroundColor: theme.bkgColor,
           contentPadding: const  EdgeInsets.all(0),
           title: Text('Novo nome:', textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22, color: theme.fontColor),),
+          style: TextStyle(fontSize: 22, color: theme.fontColor)),
           titlePadding: const EdgeInsets.only(top: 6, bottom: 6),
+          
           content:Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -63,11 +64,13 @@ class _ChangeLayoutNameDialog extends StatelessWidget{
                       foregroundColor: Colors.white,
                       elevation: 0, // Removendo a sombra
                     ),
-                    child: const Icon(Icons.cancel_outlined, size: 30,),
-                  ),
-                ],),
+                    child: const Icon(Icons.cancel_outlined, size: 30),
+                  )
+                ]
+              )
 
-            ],)
+            ]
+          )
       );
   }
 }

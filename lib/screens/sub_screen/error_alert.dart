@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:image_layout/application_theme_pers.dart';
 
+
 class ErrorAlertDialogBox extends StatelessWidget{
   final String text;
   const ErrorAlertDialogBox({super.key, required this.text});
@@ -23,8 +24,9 @@ class ErrorAlertDialogBox extends StatelessWidget{
         children: [
           const Icon(Icons.cancel, color: Colors.red, size: 50),
           Text('     ERRO!', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red))
-        ],
+        ]
       ),
+      
       titlePadding: const EdgeInsets.all(10),
       
       content: Text(
@@ -40,13 +42,15 @@ class ErrorAlertDialogBox extends StatelessWidget{
               backgroundColor: theme.buttonColor,
               foregroundColor: theme.lightButtonIconsColor
             ),
+            
             onPressed: (){
               Navigator.of(context).pop();
             },
+            
             child: Text("sair", style: TextStyle(fontSize: 30))
             
           )
-      ],
+      ]
     );
   }
 }

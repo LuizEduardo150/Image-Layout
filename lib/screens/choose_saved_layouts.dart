@@ -76,27 +76,29 @@ class _ChooseSavedLayoutsState extends State<ChooseSavedLayouts> {
         persistence!.name = persistence!.keys[_selectItem];
         List coordinates = await persistence!.getCoordinatesImg();
         irParaEditor(coordinates);
-      } else {
+      }
+      else {
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: tema.buttonColor,
               title: const Text('Erro', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),),
+              
               content: Text('Selecione um layout antes de continuar.', style: TextStyle(color: tema.fontColor)),
+              
               actions: <Widget>[
                 TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () { Navigator.of(context).pop(); },
                   child: Text('OK', style: TextStyle(color: tema.fontColor)),
-                ),
-              ],
+                )
+              ]
             );
-          },
+          }
         );
       }
     }
+
 
     return Scaffold(
       backgroundColor: tema.bkgColor,

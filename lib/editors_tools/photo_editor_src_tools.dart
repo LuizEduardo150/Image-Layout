@@ -38,9 +38,11 @@ class ImagensLayoutEditor {
     _amtSupportedPhotos = amtPhotos;
   }
 
+
   int getQtdFotosSuportadas(){
     return _amtSupportedPhotos;
   }
+
 
   void paintBackground(num r, num g, num b){
     for (var pixel in _imagemLayout!) {
@@ -50,38 +52,47 @@ class ImagensLayoutEditor {
     }
   }
 
+
   void setBkgColor(Color cor){
     _bkgColor = cor;
   }
+
 
   Color getBkgColor(){
     return _bkgColor;
   }
 
+
   void setDocumentQuality(Quality valor){
     _openedImageQuality = valor;
   }
+
 
   int getCompressionRatio(){
     return _openedImageQuality.getGalleryCompressionValue();
   }
 
+
   Quality getGaleryImageQuality(){
     return _openedImageQuality;
   }
+
 
   //Método para exibir a imagem montada em tela
   Uint8List getImageView(){
     return img.encodeJpg(_imagemLayout!);
   }
 
+
   int getIndex(){
     return _positionsIndexList;
   }
 
+
   bool canInsert(){
     return !_documentIsFull;
   }
+
 
   void clearAll(List espacosDeImagens){
     _positionsIndexList = 0;
@@ -91,26 +102,30 @@ class ImagensLayoutEditor {
     drawLayoutByPositions(espacosDeImagens);
   }
 
+
   bool getProportionLock(){
     return _proportionLock;
   }
+
 
   void lockProportionCroper(){
     _proportionLock = true;
   }
 
+
   void unlockProportionCroper(){
     _proportionLock = false;
   }
 
-  Future<void> changeBackgroundColor(List espacosDeImagens, Color cor) async{
+
+  Future<void> changeBackgroundColor(List espacosDeImagens, Color color) async{
     List current = [];
     img.Image copia = _imagemLayout!.clone();
 
     for (var pixel in _imagemLayout!) { ///pintando a cor do fundo
-      pixel.r = cor.red;
-      pixel.g = cor.green;
-      pixel.b = cor.blue;
+      pixel.r = color.red;
+      pixel.g = color.green;
+      pixel.b = color.blue;
     }
 
     for(int i=0; i < espacosDeImagens.length; i++){ ///colando as fotos ou espacos para fotos
@@ -168,9 +183,9 @@ class ImagensLayoutEditor {
     _posY1 = currentPos[3];
     int propX = _posX1! - _posX0!;
     int propY = _posY1! - _posY0!;
-
     var pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     CroppedFile? croppedFile;
+    
     if (pickedFile != null) {
       croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
@@ -192,22 +207,30 @@ class ImagensLayoutEditor {
           ),
         ],
       );
+
       if(croppedFile != null){
         //Carregando imagem para trabalhar como matriz img.Image
         _openedImage = await _pathToImgImage(croppedFile.path);
+        
         if(_openedImage != null){
           await _pasteLoadedImageIntoLayout();
+          
           if(_positionsIndexList < _amtSupportedPhotos - 1){
             _positionsIndexList++;
-          }else{_documentIsFull = true;}
+          }
+          else{
+            _documentIsFull = true;
+          }
+        
         }
       }
+    
       return true;
     }
-    else{
-      return false;
-    }
+    
+    return false;
   }
+
 
   Future<img.Image?> _pathToImgImage(String path) async{
     final cmd = img.Command();
@@ -218,11 +241,14 @@ class ImagensLayoutEditor {
       cmd.decodeImageFile(path);
       cmd.copyResize(width: largura, height: altura); //redimencionando para as dimecoes do espaco atual
       await cmd.executeThread();
+    
       return cmd.outputImage;
-    }catch(e){
+    }
+    catch(e){
       return null;
     }
   }
+
 
   Future<void> _pasteLoadedImageIntoLayout()async{
     if(_openedImage != null){
@@ -267,6 +293,7 @@ class ImagensLayoutEditor {
     }
 
   }
+
 
   void undoOneAction(List posicoesXYDaUltimaAdicao){
     if(_positionsIndexList > 0){ //há alterações que podem ser desfeitas

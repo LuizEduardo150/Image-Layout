@@ -33,6 +33,7 @@ class LayoutMaker{
   int _spaceColor = 20;
   bool _invertVariantColor = false;
 
+
   ///constructor
   LayoutMaker(UnitOfMeasurement unitOfMeasurement, int altura, int largura, int borda, Quality qualidadeDoc) {
     _documentQuality = qualidadeDoc;
@@ -49,13 +50,16 @@ class LayoutMaker{
     _remainingY = _documentHeight! - 2*_border;
   }
 
+
   void setDocumentQuality(Quality qualidade){
     _documentQuality = qualidade;
   }
 
+
   void setUnitOfMeasurement(UnitOfMeasurement valor){
     _unit = valor;
   }
+
 
   void setBkgColor([String cor = 'white']){
     if(cor == 'white'){
@@ -80,6 +84,7 @@ class LayoutMaker{
     }
   }
 
+
   void setHeight(int valor){
     if(valor < 0) {
       valor = valor * -1;
@@ -87,12 +92,14 @@ class LayoutMaker{
     _documentHeight = valor;
   }
 
+
   void setWidth(int valor){
     if(valor < 0) {
       valor = valor * -1;
     }
     _documentWidth = valor;
   }
+
 
   String setVerticalSpace(int value){
     if(value < (_documentHeight! -_border*2)){
@@ -127,6 +134,7 @@ class LayoutMaker{
     }
   }
 
+
   String setHorizontalSpace(int value){
     if(value >= _documentWidth! - _border*2) {
       return "O espaçamento horizontal entre fotos deve ser menor que o própio tamanho do documento";
@@ -160,6 +168,7 @@ class LayoutMaker{
     }
   }
 
+
   //Método deve ser usado apenas no início, antes da edição começar
   String setBorder(int value){
     if(!(value > _documentWidth! || value > _documentHeight!)){
@@ -173,43 +182,53 @@ class LayoutMaker{
     return "O tamanho da borda deve ser menor que o tamanho do própio documento.";
   }
 
+
   Quality getDocumentQuality(){
     return _documentQuality;
   }
+
 
   UnitOfMeasurement getunitOfMeasurementDocument(){
     return _unit;
   }
 
+
   int getRemainingX(){
     return _remainingX;
   }
 
+
   int getRemainingY(){
     return _remainingY;
   }
+
 
   int getWidth(){
     if(_documentWidth != null) {return _documentWidth!;}
     else {return 0;}
   }
 
+
   int getQTDespacosParaFotos(){
     return _imagesSpacesList.length;
   }
+
 
   int getEspacamentoHorizontal(){
     return _paddingX;
   }
 
+
   int getEspacamentoVertical(){
     return _paddingY;
   }
 
+
   int getHeight(){
     if(_documentHeight != null) {
       return _documentHeight!;
-    } else {
+    }
+    else {
       return 0;
     }
   }
@@ -227,7 +246,7 @@ class LayoutMaker{
   }
 
   //Método para exibir o layout montado em tela
-  Uint8List getImagemView(){
+  Uint8List getImageView(){
       return img.encodeJpg(_layoutDoc!);
   }
 

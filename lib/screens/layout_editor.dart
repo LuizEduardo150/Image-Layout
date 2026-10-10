@@ -7,7 +7,7 @@ import "package:image_layout/screens/photo_editor.dart";
 import 'package:image_layout/utils/utils.dart';
 import 'package:image_layout/utils/enum_app_values.dart';
 import "package:image_layout/screens/sub_screen/add_place_for_image.dart";
-import "package:image_layout/screens/sub_screen/alerta_erro.dart";
+import "package:image_layout/screens/sub_screen/error_alert.dart";
 import "package:image_layout/screens/sub_screen/add_space_btwn_images.dart";
 import "package:image_layout/screens/sub_screen/confirm_decision_alert.dart";
 import "package:image_layout/screens/layout_editor_manual.dart";
@@ -34,26 +34,26 @@ class LayoutEditorPage extends StatefulWidget {
   State<LayoutEditorPage> createState() => _LayoutEditorPageState();
 }
 
-///Desenvolvimento tela editor de layouts --------------------------------------
+
 class _LayoutEditorPageState extends State<LayoutEditorPage>{
   LayoutEditorPageArgs? argumentos;
-  final _controlerAltura = TextEditingController();
-  final _controlerLargura = TextEditingController();
-  final _controlerEsphorizontal = TextEditingController();
-  final _controlerEspVertical = TextEditingController();
-  final _controlerNomeLayout = TextEditingController();
+  final _controlerHeight = TextEditingController();
+  final _controlerWidth = TextEditingController();
+  final _controlerHorizontalSpace = TextEditingController();
+  final _controlerVerticalSpace = TextEditingController();
+  final _controlerLayoutName = TextEditingController();
   bool load = true;
-  bool subtelaAtivada = false;
-  LayoutMaker? _documento;
-  Uint8List? imagemView;
+  bool dialogScreenActive = false;
+  LayoutMaker? _document;
+  Uint8List? imageView;
   String infoDoc = "";
 
   void setInfoDoc(){
-    infoDoc = "> Dimenções do Documento: \n  ${_documento!.getHeight()} x ${_documento!.getWidth()} px"
-        "\n  ~${(pxToCm(_documento!.getDocumentQuality().getValorPPI(), _documento!.getHeight())).toStringAsFixed(2)} x "
-        "${(pxToCm(_documento!.getDocumentQuality().getValorPPI(), _documento!.getWidth())).toStringAsFixed(2)} cm"
-        "\n> Unidade de medida sendo usada: \n  ${_documento!.getunitOfMeasurementDocument().toStringExpanded()}"
-        "\n> PPI definido: \n  ${_documento!.getDocumentQuality().getValorPPI()}";
+    infoDoc = "> Dimenções do Documento: \n  ${_document!.getHeight()} x ${_document!.getWidth()} px"
+        "\n  ~${(pxToCm(_document!.getDocumentQuality().getValorPPI(), _document!.getHeight())).toStringAsFixed(2)} x "
+        "${(pxToCm(_document!.getDocumentQuality().getValorPPI(), _document!.getWidth())).toStringAsFixed(2)} cm"
+        "\n> Unidade de medida sendo usada: \n  ${_document!.getunitOfMeasurementDocument().toStringExpanded()}"
+        "\n> PPI definido: \n  ${_document!.getDocumentQuality().getValorPPI()}";
   }
 
   void exibirTelaErro(String textoErro){
@@ -70,7 +70,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
     
     await Future.delayed(const Duration(milliseconds: 500)); //tempo para troca de tela
     
-    _documento = LayoutMaker(argumentos!.unit, argumentos!.height, argumentos!.width, argumentos!.border, argumentos!.quality);
+    _document = LayoutMaker(argumentos!.unit, argumentos!.height, argumentos!.width, argumentos!.border, argumentos!.quality);
     
     setState(() {});
     
@@ -79,7 +79,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
       setState(() {});
     });
     
-    imagemView = _documento!.getImagemView();
+    imageView = _document!.getImageView();
     setInfoDoc();
   }
 
@@ -140,20 +140,20 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
                 Container(padding: EdgeInsets.only(left: telaTamanho.width*0.05), child: Column(children: [
                   ListTile(
                     title: Text('Centímetros', style: TextStyle(color: tema.fontColor)),
-                    leading: _documento?.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters? Icon(Icons.radio_button_checked, color: tema.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: tema.lightButtonIconsColor),
+                    leading: _document?.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters? Icon(Icons.radio_button_checked, color: tema.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: tema.lightButtonIconsColor),
                     onTap: (){
                       setState(() {
-                        _documento!.setUnitOfMeasurement(UnitOfMeasurement.centimeters);
+                        _document!.setUnitOfMeasurement(UnitOfMeasurement.centimeters);
                         setInfoDoc();
                       });
                     },
                   ),
                   ListTile(
                     title: Text('Pixels', style: TextStyle(color: tema.fontColor)),
-                    leading: _documento?.getunitOfMeasurementDocument() == UnitOfMeasurement.pixels? Icon(Icons.radio_button_checked, color: tema.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: tema.lightButtonIconsColor),
+                    leading: _document?.getunitOfMeasurementDocument() == UnitOfMeasurement.pixels? Icon(Icons.radio_button_checked, color: tema.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: tema.lightButtonIconsColor),
                     onTap: (){
                       setState(() {
-                        _documento!.setUnitOfMeasurement(UnitOfMeasurement.pixels);
+                        _document!.setUnitOfMeasurement(UnitOfMeasurement.pixels);
                         setInfoDoc();
                       });
                     },
@@ -248,43 +248,43 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
   }//build fim
 
   Widget layoutView(){
-    if(load && !subtelaAtivada){
+    if(load && !dialogScreenActive){
       return const Text('');
     }else{
       return ListView( //Exibindo em tela o Layout sendo criado
         shrinkWrap: true,
         padding: const EdgeInsets.all(2),
-        children: [Image.memory(imagemView!)],
+        children: [Image.memory(imageView!)],
       );
     }
   }
 
   Future<void> _adicionarAreaParaFoto() async{
-    subtelaAtivada = true;
+    dialogScreenActive = true;
     int? altura;
     int? largura;
     await showDialog(context: context, builder: (BuildContext context){
       return AddImageSpaceMenu(
-        docQuality: _documento!.getDocumentQuality(),
-        unitOfMeasurement: _documento!.getunitOfMeasurementDocument(),
-        recommendedHeight: _documento!.getCurrLineRecommendedHeight(),
-        restX: _documento!.getRemainingX(),
-        restY: _documento!.getRemainingY(),
-        controlerHeight: _controlerAltura,
-        controlerWidth: _controlerLargura,
+        docQuality: _document!.getDocumentQuality(),
+        unitOfMeasurement: _document!.getunitOfMeasurementDocument(),
+        recommendedHeight: _document!.getCurrLineRecommendedHeight(),
+        restX: _document!.getRemainingX(),
+        restY: _document!.getRemainingY(),
+        controlerHeight: _controlerHeight,
+        controlerWidth: _controlerWidth,
         confirmFunction: ()async{
 
-          if(_documento!.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters){//exige convercao para pixels
-            altura = cmToPx(_documento!.getDocumentQuality().getValorPPI(), _controlerAltura.text);
-            largura = cmToPx(_documento!.getDocumentQuality().getValorPPI(), _controlerLargura.text);
+          if(_document!.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters){//exige convercao para pixels
+            altura = cmToPx(_document!.getDocumentQuality().getValorPPI(), _controlerHeight.text);
+            largura = cmToPx(_document!.getDocumentQuality().getValorPPI(), _controlerWidth.text);
           }
           else{ //ja está em pixels (editor trabalha em pixels)
-            altura = stringParseInt(_controlerAltura.text);
-            largura = stringParseInt(_controlerLargura.text);
+            altura = stringParseInt(_controlerHeight.text);
+            largura = stringParseInt(_controlerWidth.text);
           }
 
           if(altura != null && largura != null && altura != 0 && largura != 0){
-            if(_documento!.getCurrentLineHeight() != 0 && (altura! > _documento!.getCurrLineRecommendedHeight() && altura! <= _documento!.getHeight())){
+            if(_document!.getCurrentLineHeight() != 0 && (altura! > _document!.getCurrLineRecommendedHeight() && altura! <= _document!.getHeight())){
               ///caso o usuario informe uma altura maior que na linha, ele deve ter certeza que quer isso
               ///essa confirmacao se da ao fato de adicionar espacos inutilizaveis com esse comportamento
               await showDialog(context: context, barrierDismissible: true ,builder: (context){
@@ -296,12 +296,12 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
                     Navigator.of(context).pop();
                     load = true;
                     setState(() {
-                      Future<String> ret = _documento!.createSpaceToImage(altura!, largura!);
+                      Future<String> ret = _document!.createSpaceToImage(altura!, largura!);
                       ret.then((value){
                         if(value != 'ok'){
                           load = false;
-                          _controlerLargura.clear();
-                          _controlerAltura.clear();
+                          _controlerWidth.clear();
+                          _controlerHeight.clear();
                           exibirTelaErro(value);
                         }
                       });
@@ -316,11 +316,11 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
               Navigator.of(context).pop();
               load = true;
               setState(() {
-                Future<String> ret = _documento!.createSpaceToImage(altura!, largura!);
+                Future<String> ret = _document!.createSpaceToImage(altura!, largura!);
                 ret.then((value){
                   if(value != 'ok'){ //retorno de erro é instantaneo
-                    _controlerLargura.clear();
-                    _controlerAltura.clear();
+                    _controlerWidth.clear();
+                    _controlerHeight.clear();
                     exibirTelaErro(value);
                   }
                 });
@@ -334,43 +334,43 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
     if(load){
       await Future.delayed(const Duration(milliseconds: 200)); //tempo até a tela fechar
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        imagemView = _documento!.getImagemView();
+        imageView = _document!.getImageView();
         setState(() {
           load = false;
         });
       });
     }
-    subtelaAtivada = false;
+    dialogScreenActive = false;
   }
 
   void _defEspacamentosHV() async{
-    subtelaAtivada = true;
+    dialogScreenActive = true;
     await showDialog(context: context, builder: (context){
       return AddspaceBtwnImagesMenu(
-        unitOfMeasurement: _documento!.getunitOfMeasurementDocument(),
-        controlerHorizontalSpacing: _controlerEsphorizontal,
-        controlerVerticalSpacing: _controlerEspVertical,
+        unitOfMeasurement: _document!.getunitOfMeasurementDocument(),
+        controlerHorizontalSpacing: _controlerHorizontalSpace,
+        controlerVerticalSpacing: _controlerVerticalSpace,
         funcaoConfirmar: (){
-          if(stringIsNumeric(_controlerEsphorizontal.text) == false && stringIsNumeric(_controlerEspVertical.text) == false) {
+          if(stringIsNumeric(_controlerHorizontalSpace.text) == false && stringIsNumeric(_controlerVerticalSpace.text) == false) {
             exibirTelaErro('Formato de entrada desconhecido em ambos os campos, insira apenas números inteiros');
           }
-          else if(stringIsNumeric(_controlerEsphorizontal.text) == false || stringIsNumeric(_controlerEspVertical.text) == false) {
-            if(stringIsNumeric(_controlerEsphorizontal.text) == false){
+          else if(stringIsNumeric(_controlerHorizontalSpace.text) == false || stringIsNumeric(_controlerVerticalSpace.text) == false) {
+            if(stringIsNumeric(_controlerHorizontalSpace.text) == false){
               exibirTelaErro('Formato de entrada desconhecido no campo de espaçamento horizontal. Nenhuma alteração feita.');
             }
-            if(stringIsNumeric(_controlerEspVertical.text) == false){
+            if(stringIsNumeric(_controlerVerticalSpace.text) == false){
               exibirTelaErro('Formato de entrada desconhecido no campo de espaçamento vertical. Nenhuma alteração feita.');
             }
           }else{ //caso for inserido apenas valores inteiros... prosseguir...
             String retx, rety;
 
-            if(_documento!.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters){ //exige parse para int
-              rety = _documento!.setVerticalSpace(cmToPx(_documento!.getDocumentQuality().getValorPPI(), _controlerEspVertical.text)!);
-              retx = _documento!.setHorizontalSpace(cmToPx(_documento!.getDocumentQuality().getValorPPI(), _controlerEsphorizontal.text)!);
+            if(_document!.getunitOfMeasurementDocument() == UnitOfMeasurement.centimeters){ //exige parse para int
+              rety = _document!.setVerticalSpace(cmToPx(_document!.getDocumentQuality().getValorPPI(), _controlerVerticalSpace.text)!);
+              retx = _document!.setHorizontalSpace(cmToPx(_document!.getDocumentQuality().getValorPPI(), _controlerHorizontalSpace.text)!);
             }
             else{ //ja esta em px n precisa de parse para o editor de layout
-              retx = _documento!.setHorizontalSpace(stringParseInt(_controlerEsphorizontal.text)!);
-              rety = _documento!.setVerticalSpace(stringParseInt(_controlerEspVertical.text)!);
+              retx = _document!.setHorizontalSpace(stringParseInt(_controlerHorizontalSpace.text)!);
+              rety = _document!.setVerticalSpace(stringParseInt(_controlerVerticalSpace.text)!);
             }
 
             if(retx != 'ok' && rety != 'ok'){//usuario inseriu numero absurdo em ambos os campos
@@ -380,12 +380,12 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
               if(retx != 'ok'){//esp. horizontal invalido
                 retx += '. Apenas esp. vertical foi alterado.';
                 exibirTelaErro(retx);
-                _controlerEsphorizontal.text = '${_documento!.getEspacamentoHorizontal()}';
+                _controlerHorizontalSpace.text = '${_document!.getEspacamentoHorizontal()}';
               }
               else if(rety != 'ok'){
                 rety += '. Apenas esp. horizontal foi alterado.';
                 exibirTelaErro(rety);
-                _controlerEspVertical.text = '${_documento!.getEspacamentoVertical()}';
+                _controlerVerticalSpace.text = '${_document!.getEspacamentoVertical()}';
               }
             }else{ //condição válida para todos os campos
               Navigator.of(context).pop();
@@ -394,11 +394,11 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
         },
       );
     },);
-    subtelaAtivada = false;
+    dialogScreenActive = false;
   }
 
   void _desfazerAcao()async{
-    if(_documento!.getQTDespacosParaFotos() != 0){
+    if(_document!.getQTDespacosParaFotos() != 0){
       await showDialog(context: context, barrierDismissible: true ,builder: (context){
         return ConfirmDecisionDialog(
           text: "Deseja realmente desfazer uma ação feita no documento?\nEssa ação será irreversível.",
@@ -408,14 +408,14 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
             load = true;
             setState((){
               setState(() { //status de load na tela
-                subtelaAtivada = true;
+                dialogScreenActive = true;
                 load= true;
               });
               setState(() {
-                _documento!.undoAction();
-                imagemView = _documento!.getImagemView();
+                _document!.undoAction();
+                imageView = _document!.getImageView();
                 load = false;
-                subtelaAtivada = false;
+                dialogScreenActive = false;
               });
             });
           },
@@ -425,7 +425,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
   }
 
   void _limparTodoDocumento() async{
-    if(_documento!.getQTDespacosParaFotos() != 0){
+    if(_document!.getQTDespacosParaFotos() != 0){
       await showDialog(context: context, barrierDismissible: true ,builder: (context){
         return ConfirmDecisionDialog(
           text: "Deseja realmente deletar todas alterações feitas no documento?\nEssa ação é irreversível.",
@@ -434,8 +434,8 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
             Navigator.of(context).pop();
             load = true;
             setState(() {
-              _documento!.clearAll();
-              _documento!.setBkgColor('white');
+              _document!.clearAll();
+              _document!.setBkgColor('white');
             });
           },
         );
@@ -444,7 +444,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
         await Future.delayed(const Duration(milliseconds: 200)); //tempo para a tela fechar
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            imagemView = _documento!.getImagemView();
+            imageView = _document!.getImageView();
             load = false;
           });
         });
@@ -453,13 +453,13 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
   }
 
   void _pularLinha(){
-    if(_documento!.getQTDespacosParaFotos() != 0){
+    if(_document!.getQTDespacosParaFotos() != 0){
       showDialog(context: context, barrierDismissible: true ,builder: (context){
         return ConfirmDecisionDialog(
           text: "\nSe você trocar de linha, não poderá adicionar mais espaços para foto futuramente na linha que foi pulada.",
           subtext: "\nDeseja pular de linha mesmo assim?",
           confirmFunction: (){
-            _documento!.jumpLine();
+            _document!.jumpLine();
             Navigator.of(context).pop();
           },
         );
@@ -474,11 +474,11 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
   Future<void> menuSalvar() async{
     Future<bool> verificarSalvar()async{
       bool salvou = false;
-      if(_controlerNomeLayout.text.trim().isEmpty){
+      if(_controlerLayoutName.text.trim().isEmpty){
         exibirTelaErro("Você deve preencher o campo de nome do layout com um nome objetivo, pois ajudará na hora de identificar o layout desejado para futuras edições de imagens.");
         return false;
       }else{
-        salvou = await _documento!.saveConfigurationLayoutSHPREF(_controlerNomeLayout.text.trim());
+        salvou = await _document!.saveConfigurationLayoutSHPREF(_controlerLayoutName.text.trim());
 
         if(!salvou){
           exibirTelaErro("Esse nome de layout já existe, insira outro nome para o layout atual.");
@@ -489,7 +489,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
       }
     }
 
-    if(_documento!.getQTDespacosParaFotos() > 0){
+    if(_document!.getQTDespacosParaFotos() > 0){
       await showDialog(context: context, builder: (context){ ///tela principal
         fecharTela(){
           Navigator.of(context).pop();
@@ -497,7 +497,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
         bool salvou = false;
         return SaveLayoutDialog(
           title: "Digite um nome para o Layout\n",
-          controlerNomeLayout: _controlerNomeLayout,
+          controlerNomeLayout: _controlerLayoutName,
           
           confirmFunction2: () async{//salvar e permanecer no editor de layouts
             salvou = await verificarSalvar();
@@ -543,7 +543,7 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
       return ret;
     }
 
-    if(_documento!.getPositionsToImages().isEmpty){
+    if(_document!.getPositionsToImages().isEmpty){
       sairEditor();
     }
     else{
@@ -556,12 +556,12 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
   }
 
   void irParaEditorDeFotos(){
-    var args = ImageEditorPageArgs(_documento!.getHeight(), _documento!.getWidth(), _documento!.getPositionsToImages());
+    var args = ImageEditorPageArgs(_document!.getHeight(), _document!.getWidth(), _document!.getPositionsToImages());
     Navigator.pushNamedAndRemoveUntil(context, "/editorImagens", arguments: args, ModalRoute.withName("/"));
   }
 
   void telaPularParaEditor(){
-    if(_documento!.getQTDespacosParaFotos() > 0){
+    if(_document!.getQTDespacosParaFotos() > 0){
       showDialog(context: context, barrierDismissible: true ,builder: (context){
         return ConfirmDecisionDialog(
           text: "\t\tDeseja realmente ir para a pagina de inserção de fotos? Caso a configuração de layout atual não foi salva, essa configuração será perdida.\n"

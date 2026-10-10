@@ -169,14 +169,15 @@ class _CreateNewLayoutPageState extends State<CreateNewLayoutPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20
-                ),
-              ),
+                )
+              )
             )
-          ],
-        ),
-      ),
+          ]
+        )
+      )
     );
   }
+
 
   void _confirmarConfiguracoes() {
     UnitOfMeasurement unidadedoc = UnitOfMeasurement.pixels;
@@ -197,7 +198,6 @@ class _CreateNewLayoutPageState extends State<CreateNewLayoutPage> {
     } else if (_selectQuality == 'Muito Alto') {
       qualidadeDoc = Quality.high;
     }
-
 
     if (_selectUnit == 'px') {
       //não é preciso fazer convercao para o editor de layouts
@@ -229,11 +229,12 @@ class _CreateNewLayoutPageState extends State<CreateNewLayoutPage> {
                 Navigator.pop(context);
               },
               child: const Text('OK'),
-            ),
-          ],
-        ),
+            )
+          ]
+        )
       );
-    } else {
+    } 
+    else {
       _controllerBorder.text = '';
       if(bordadoc >= larguradoc || bordadoc >= alturadoc){
         showDialog(
@@ -251,7 +252,8 @@ class _CreateNewLayoutPageState extends State<CreateNewLayoutPage> {
             ],
           ),
         );
-      }else{
+      }
+      else{
         LayoutEditorPageArgs args = LayoutEditorPageArgs(alturadoc, larguradoc, bordadoc, qualidadeDoc, unidadedoc);
         Navigator.pushNamedAndRemoveUntil(context, '/editorLayouts', arguments: args, ModalRoute.withName('/'));
       }

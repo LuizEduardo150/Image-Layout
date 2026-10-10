@@ -7,7 +7,7 @@ import 'dart:typed_data';
 import 'package:image_layout/utils/enum_app_values.dart';
 import 'package:image_layout/editors_tools/photo_editor_src_tools.dart';
 import "package:image_layout/screens/photo_editor_manual.dart";
-import "package:image_layout/screens/sub_screen/alerta_erro.dart";
+import "package:image_layout/screens/sub_screen/error_alert.dart";
 import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
 import 'package:image_layout/application_theme_pers.dart';
 
@@ -410,6 +410,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
     }
   }
 
+
   Widget documentImageView(){
     if(load){
       return const Text('');
@@ -421,6 +422,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
       );
     }
   }
+
 
   Future<Color> colorPicker(AppThemePers theme) async{
     final Color newColor = await showColorPickerDialog( // TODO dando erro aqui
@@ -480,6 +482,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
       }
     }
   }
+
 
   void _fillCurrentSpaceWithColor(AppThemePers theme)async {
     if(_document!.canInsert()){
@@ -551,6 +554,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
     }
   }
 
+
   void _removeAllImages(){
     if(_document!.getIndex() != 0){
       showDialog(context: context, barrierDismissible: true ,builder: (context){
@@ -612,9 +616,11 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
     },);
   }
 
+
   void _goBackHome(){
     Navigator.popUntil(context, ModalRoute.withName('/'));
   }
+
 
   Future<bool> _exibirTelaConfirmacaoVoltarParaHome(context) async{
     bool ret = false;

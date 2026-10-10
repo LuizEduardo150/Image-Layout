@@ -16,10 +16,12 @@ class LayoutPersistence{
     );
   }
 
+
   Future<void> removeAll() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
   }
+
 
   Future<List> getCoordinatesImg() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -36,12 +38,14 @@ class LayoutPersistence{
     }
   }
 
+
   Future<void> saveCoordinatesImg(List posicoes) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if(name != null || name != ''){
       await prefs.setString(name!, jsonEncode(posicoes));
     }
   }
+
 
   Future<void> saveDocumentSize(int altura, int largura) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,10 +56,12 @@ class LayoutPersistence{
     }
   }
 
+
   Future<void> saveThumbnailLayout({required String stringNumerosUint8List}) async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('THUMB-${name!}', stringNumerosUint8List);
   }
+
 
   Future<Uint8List> getThumbnailLayout()async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,6 +72,7 @@ class LayoutPersistence{
       return Uint8List.fromList(storedContent.split(',').map((e) => int.parse(e)).toList());
     }
   }
+
 
   Future<List> getDocumentSize() async{
     if(name == null){
@@ -81,10 +88,12 @@ class LayoutPersistence{
     }
   }
 
+
   Future<List<String>> getAllKeys() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getKeys().toList();
   }
+
 
   Future<void> deleteByKey(String key) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -93,9 +102,11 @@ class LayoutPersistence{
     await prefs.remove('THUMB-$key');
   }
 
+
   int getAmtSavedLayouts(){
     return keys.length;
   }
+
 
   Future<bool> changeKeyName ({required String chave, required String newKeyName}) async{
     List keys = await getAllKeys();
