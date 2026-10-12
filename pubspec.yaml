@@ -38,10 +38,15 @@ dependencies:
   shared_preferences: ^2.5.6
   provider: ^6.1.5+1
   carousel_slider: ^5.1.2
-  #image_gallery_saver: '^2.0.3' # need manifest
+
+  saver_gallery: ^5.0.0
+
   path_provider: ^2.1.6
   flex_color_picker: ^4.0.0
+  
   permission_handler: ^13.0.2 # need gradle.properties and android/app/build.gradle
+  device_info_plus: ^13.3.0
+
   material_ui: ^1.6.0
 
 

@@ -7,7 +7,7 @@ import 'package:image_layout/utils/enum_app_values.dart';
 import "package:image/image.dart" as img;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-//import "package:image_gallery_saver/image_gallery_saver.dart";
+import 'package:saver_gallery/saver_gallery.dart';
 
 
 class ImagensLayoutEditor {
@@ -123,9 +123,9 @@ class ImagensLayoutEditor {
     img.Image copia = _imagemLayout!.clone();
 
     for (var pixel in _imagemLayout!) { ///pintando a cor do fundo
-      pixel.r = color.red;
-      pixel.g = color.green;
-      pixel.b = color.blue;
+      pixel.r = (color.r * 255).round();
+      pixel.g = (color.g * 255).round();
+      pixel.b = (color.b * 255).round();
     }
 
     for(int i=0; i < espacosDeImagens.length; i++){ ///colando as fotos ou espacos para fotos
@@ -199,7 +199,6 @@ class ImagensLayoutEditor {
               toolbarWidgetColor: Colors.white, //cor da fonte e icones appbar
               backgroundColor: tema.buttonColor,
               activeControlsWidgetColor: Colors.black, //itens selecionados
-              statusBarColor: tema.buttonColor,
               lockAspectRatio: _proportionLock
           ),
           IOSUiSettings(
@@ -277,11 +276,15 @@ class ImagensLayoutEditor {
     _posY1 = currentPos[3];
 
     for(int x =_posX0!; x < _posX1!; x++){
-      
-      for(int y = _posY0!; y < _posY1!; y++){
-        _imagemLayout!.setPixelRgb(x, y, color.red, color.green, color.blue);
-      }
 
+      for(int y = _posY0!; y < _posY1!; y++){
+        _imagemLayout!.setPixelRgb(
+          x, y,
+          (color.r * 255).round(),
+          (color.g * 255).round(),
+          (color.b * 255).round()
+        );
+      }
     }
 
     if(_positionsIndexList < _amtSupportedPhotos - 1){
@@ -335,18 +338,17 @@ class ImagensLayoutEditor {
   }
   
 
-  Future<bool> saveImage(String nomeArquivo) async{
-    //configurando arquivo a ser gerado
+  Future<bool> saveImage(String fileName) async{
+    
     if(_imagemLayout == null){
       return false;
     }
-    //salvar na galeria em formato jpg
-    //final png = img.encodePng(_imagemLayout!); 
-    // TODO
-    //final result = await ImageGallerySaver.saveImage(png, name: nomeArquivo, quality: 100);
-    print("Era para salvar");
-    //return result['isSuccess'];
-    return true; // TODO remover dps
+    
+    final png = img.encodePng(_imagemLayout!); 
+
+    final result = await SaverGallery.saveImage(png, fileName: fileName, quality: 100, albumPath: "Image Layout", skipIfExists: false);
+    
+    return result.isSuccess;
   }
 
 }

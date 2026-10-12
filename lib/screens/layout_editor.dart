@@ -180,7 +180,13 @@ class _LayoutEditorPageState extends State<LayoutEditorPage>{
         PopScope(
           canPop: false,
           child: const Text(""),
-          onPopInvoked: (bool didPop){if(didPop){return;} goToHome();},
+          onPopInvokedWithResult: (bool didPop, Object? result) {
+            if(didPop){
+              return;
+            }
+            goToHome();
+          },
+
         ),
         layoutView(),
         Visibility(

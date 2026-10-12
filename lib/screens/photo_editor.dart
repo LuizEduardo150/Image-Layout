@@ -10,7 +10,8 @@ import "package:image_layout/screens/photo_editor_manual.dart";
 import "package:image_layout/screens/sub_screen/error_alert.dart";
 import 'package:image_layout/screens/sub_screen/confirm_decision_alert.dart';
 import 'package:image_layout/application_theme_pers.dart';
-
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class ImageEditorPageArgs{
   final int documentHeight;
@@ -35,7 +36,6 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
   ImagensLayoutEditor? _document;
   Uint8List? imageView;
   Color _addButtonsColor = Colors.white;
-  late String name; // TODO: ver se precisa
   String selectColorTittle = 'Selecione a cor';
   Color selectedColor = Colors.white;
   bool load = true;
@@ -65,7 +65,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
 
   @override
   void initState() {
-    requestPermission();
+    checkAndRequestPermissions(skipIfExists: false);
     super.initState();
   }
 
@@ -82,15 +82,30 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
   }
 
 
-  void requestPermission() async{
-    var status = await Permission.storage.status;
-    if (!status.isGranted){
-      await Permission.storage.request();
+  Future<void> checkAndRequestPermissions({required bool skipIfExists}) async {
+    
+    if (!Platform.isAndroid) {
+      return; // Only Android platform is supported
     }
-    var status1 = await Permission.manageExternalStorage.status;
-    if (!status1.isGranted){
-      await Permission.manageExternalStorage.request();
+    
+    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+    final sdkInt = deviceInfo.version.sdkInt;
+
+    if (sdkInt < 29) {
+      await Permission.storage.request().isGranted;
+      return;
     }
+
+    if (!skipIfExists) {
+      return;
+    }
+
+    if (sdkInt < 33) {
+      await Permission.storage.request().isGranted;
+      return;
+    }
+
+    await Permission.photos.request().isGranted;    
   }
 
 
@@ -99,31 +114,41 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
     final theme = Provider.of<AppThemePers>(context);
     final Size screenSize = MediaQuery.of(context).size;
 
-    void salvarDocumento() async{
-      bool res = await _document!.saveImage('ImgLayout${DateTime.now().toString()}');
-      if(res){
-        showDialog(builder: (context) => AlertDialog(
-              backgroundColor: theme.bkgColor,
-              title: Text("Imagem salva na geleria do seu celular", style: TextStyle(color: theme.fontColor)),
-              actions: [
-                Center(child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: theme.lightButtonIconsColor,
-                        backgroundColor: theme.buttonColor,
-                        elevation: 0
-                      ),
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))
-                ),)
-              ],
-            ),
-            context: context
+    void salvarDocumento(BuildContext context) async{
+      bool sucess = await _document!.saveImage('ImgLayout${DateTime.now().toString()}');
+      
+      if (!context.mounted) { // Tela pode ser fechada inesperadamente enquanto aguarda retorno
+        return;
+      }
+
+      if(sucess){
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: theme.bkgColor,
+            title: Text("Imagem salva na geleria do seu celular", style: TextStyle(color: theme.fontColor)),
+            actions: [
+              Center(child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: theme.lightButtonIconsColor,
+                      backgroundColor: theme.buttonColor,
+                      elevation: 0
+                    ),
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))
+              ))
+            ]
+          ) 
         );
+      
       }
       else{
+
         _showErrorScreen("Erro inesperado ao tentar salvar a imagem na galeria.\nTente novamente mais tarde.", context);
+      
       }
     }
 
@@ -145,7 +170,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
           IconButton(//voltar para a home
               onPressed: ()async{
                 if(_document!.getIndex() > 0){
-                  bool ret = await _exibirTelaConfirmacaoVoltarParaHome(context);
+                  bool ret = await _showConfirmScreenToGoHome(context);
                   if(ret){
                     _goBackHome();
                   }
@@ -308,14 +333,17 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
             ),
         ],),
       ),
+      
       body: Stack(children: [
         PopScope(
           canPop: false,
           child: const Text(""),
-          onPopInvoked: (bool didPop)async {
-            if(didPop){return;}
+          onPopInvokedWithResult: (bool didPop, Object? result) async {
+            if(didPop){
+              return;
+            }
             if(_document!.getIndex() > 0){
-              bool ret = await _exibirTelaConfirmacaoVoltarParaHome(context);
+              bool ret = await _showConfirmScreenToGoHome(context);
               if(ret){
                 _goBackHome();
               }
@@ -379,7 +407,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
             ),
             IconButton(
               icon: const Icon(Icons.save, color: Colors.white),
-              onPressed: () => salvarDocumento()
+              onPressed: () => salvarDocumento(context)
             ),
           ],
         ),
@@ -425,7 +453,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
 
 
   Future<Color> colorPicker(AppThemePers theme) async{
-    final Color newColor = await showColorPickerDialog( // TODO dando erro aqui
+    final Color newColor = await showColorPickerDialog(
       context,
       selectedColor,
       title: Text(selectColorTittle,
@@ -622,7 +650,7 @@ class _ImageEditorPageState extends State<ImageEditorPage> {
   }
 
 
-  Future<bool> _exibirTelaConfirmacaoVoltarParaHome(context) async{
+  Future<bool> _showConfirmScreenToGoHome(BuildContext context) async{
     bool ret = false;
     await showDialog(context: context, builder: (context){
       return ConfirmDecisionDialog(
