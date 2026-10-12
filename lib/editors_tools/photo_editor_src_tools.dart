@@ -1,5 +1,5 @@
 import 'dart:typed_data';  //para usar o unit8list para visualização
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'package:image_layout/application_theme_pers.dart';
 import 'package:image_layout/utils/enum_app_values.dart';
