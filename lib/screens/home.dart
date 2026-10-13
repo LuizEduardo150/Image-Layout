@@ -44,28 +44,29 @@ class _HomeState extends State<Home> {
     startF(theme);
 
     final List<Widget> carouselItems = [
+      Image.asset("assets/images/logo_img_layout_TEXT.png"),
       Image.asset("assets/images/ly1.png"),
       Image.asset("assets/images/op1.png"),
       Image.asset("assets/images/ly2.png"),
       Image.asset("assets/images/op2.png"),
       Image.asset("assets/images/ly3.png"),
       Image.asset("assets/images/op3.png"),
-      Image.asset("assets/images/ly4.png"),
-      Image.asset("assets/images/op4.png"),
     ];
 
     return Scaffold(
       backgroundColor: theme.bkgColor,
+      
       appBar: AppBar(
         title: const Text("Image Layout"),
         foregroundColor: Colors.white,
         backgroundColor: theme.buttonColor,
       ),
+      
       drawer: Drawer(
         backgroundColor: theme.buttonColor,
         child: ListView(children: [
           Padding(padding: EdgeInsets.all(telaTamanho.height*0.02)),
-          Image.asset('assets/images/logo.png'),
+          Image.asset("assets/images/logo_img_layout_TEXT.png"),
           Padding(padding: EdgeInsets.all(telaTamanho.height*0.01)),
           Container(color: theme.iconsColor, padding: const EdgeInsets.only(top: 1),),
           ListTile(
@@ -102,113 +103,123 @@ class _HomeState extends State<Home> {
       ),
 
       body: ListView(children: [
-          Image.asset("assets/images/logo.png", alignment: Alignment.center,),
-          Padding(padding: EdgeInsets.only(left: telaTamanho.width*0.02, right: telaTamanho.width*0.02),
-            child: Column(children: [
-              ElevatedButton(
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/criarNovoLayout");
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: theme.iconsColor,
-                      backgroundColor: theme.buttonColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
-                  ),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add, size: telaTamanho.width*0.22, color: theme.iconsColor, ),
-                        Icon(Icons.space_dashboard_sharp, size: telaTamanho.width*0.22, color: theme.iconsColor,),
-                      ],
-                    ),
-                    const Text('Criar novo layout',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                      ),
-                    ),
-                  ],)
-              ),
+              
+        Container(
+          decoration: BoxDecoration(color: Color.fromARGB(80, 0, 0, 0), borderRadius: BorderRadius.all(Radius.circular(10))),
+          margin: EdgeInsets.all(20),
 
-              Padding(padding: EdgeInsets.all(telaTamanho.height*0.015)),
-
-              ElevatedButton(
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/editarComlayoutsExistentes");
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: theme.iconsColor,
-                      backgroundColor: theme.buttonColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
-                  ),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.photo, size: telaTamanho.width*0.22, color: theme.iconsColor,),
-                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
-                      ],
-                    ),
-                    const Text('Editar com layouts existentes',textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                      ),
-                    ),
-                  ],)
-              ),
-
-              Padding(padding: EdgeInsets.all(telaTamanho.height*0.015)),
-
-              ElevatedButton(
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/gerenciarLayouts");
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: theme.iconsColor,
-                      backgroundColor: theme.buttonColor,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
-                  ),
-                  child: Column(children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.save_as_rounded, size: telaTamanho.width*0.22, color: theme.iconsColor,),
-                        Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
-                      ],),
-                    const Text('Gerenciar layouts salvos',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                      ),
-                    ),
-                  ],)
-              ),
-
-              Padding(padding: EdgeInsets.only(top: telaTamanho.height*0.03),
-                child: Text("Construa diversas configurações de layout para criar suas fotos",
-                    style: TextStyle(
-                      color: theme.fontColor,
-                      fontSize: telaTamanho.width*0.06,
-                      fontWeight: FontWeight.bold,
-                    )
-                ),
-              ),
-            ],),
-          ),
-
-          CarouselSlider( //Mostrando as imagens
+          child: CarouselSlider(
             items: carouselItems,
             options: CarouselOptions(
               viewportFraction: 1, // Apenas um item visível por vez
               autoPlay: true,
               enableInfiniteScroll: true,
-              autoPlayInterval: const Duration(seconds: 5), // Intervalo entre as imagens
+              autoPlayInterval: const Duration(seconds: 5),
               autoPlayCurve: Curves.easeInOutBack,
+              height: 300
             )
-          ),
+          )
+        ),
 
-          const Padding(padding: EdgeInsets.all(30))
+        Padding(
+          padding: EdgeInsets.only(left: telaTamanho.width*0.05, right: telaTamanho.width*0.05),
+          child: Column(children: [
+            
+            Text("Construa diversas configurações de layout para criar suas fotos",
+                style: TextStyle(
+                  color: theme.fontColor,
+                  fontSize: telaTamanho.width*0.06,
+                  fontWeight: FontWeight.bold,
+                )
+            ),
+
+            const Padding(padding: EdgeInsets.all(10)),
+
+            ElevatedButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, "/criarNovoLayout");
+                },
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: theme.iconsColor,
+                    backgroundColor: theme.buttonColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                ),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.add, size: telaTamanho.width*0.22, color: theme.iconsColor, ),
+                      Icon(Icons.space_dashboard_sharp, size: telaTamanho.width*0.22, color: theme.iconsColor,),
+                    ],
+                  ),
+                  const Text('Criar novo layout',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                    ),
+                  ),
+                ],)
+            ),
+
+            Padding(padding: EdgeInsets.all(telaTamanho.height*0.015)),
+
+            ElevatedButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, "/editarComlayoutsExistentes");
+                },
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: theme.iconsColor,
+                    backgroundColor: theme.buttonColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                ),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.photo, size: telaTamanho.width*0.22, color: theme.iconsColor,),
+                      Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
+                    ],
+                  ),
+                  const Text('Editar com layouts existentes',textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                    ),
+                  ),
+                ],)
+            ),
+
+            Padding(padding: EdgeInsets.all(telaTamanho.height*0.015)),
+
+            ElevatedButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, "/gerenciarLayouts");
+                },
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: theme.iconsColor,
+                    backgroundColor: theme.buttonColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
+                ),
+                child: Column(children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.save_as_rounded, size: telaTamanho.width*0.22, color: theme.iconsColor,),
+                      Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
+                    ],),
+                  const Text('Gerenciar layouts salvos',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
+                    ),
+                  ),
+                ],)
+            )
+            
+          ])
+        ),
+
+        const Padding(padding: EdgeInsets.all(30))
+      
       ])
     );
   } //final build method

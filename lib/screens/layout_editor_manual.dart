@@ -12,28 +12,25 @@ class HelpEditorLayout extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      
+      backgroundColor: theme.bkgColor,
+
       appBar: AppBar(
         foregroundColor: Colors.white,
         title: Text("Manual Editor de Layouts", style: TextStyle(fontSize: screenSize.width*0.05)),
         backgroundColor: theme.buttonColor,
       ),
-      backgroundColor: theme.bkgColor,
+
       body: ListView(
         padding: const EdgeInsets.only(right: 10, left: 10),
+        
         children: [
-          Text("\t\t\t\tO editor de layouts permite a criação de um layout personalizado, inserindo espaços para imagens de acordo com a configuração escolhida. Layouts criados podem ser salvos para serem usados novamente em um outro documento futuro.",
-            softWrap: true,
-            style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
-            textAlign: TextAlign.justify,
-          ),
-          
-          Text("\t\t\t\tQuando a edição da configuração de layout estiver pronta, haverá duas opções: Salvar o layout para usar mais tarde, ou salvar e também inserir imagens no layout. Caso a segunda opção for a escolhida, assim que terminar de salvar a configuração de layout, a aplicação será movida para a tela de inserção de imagens nos espaços de imagens do layout.",
-            softWrap: true,
-            style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
-            textAlign: TextAlign.justify,
-          ),
-          
-          Text('\t\t\t\tO editor de layout consiste na área de exibição em tempo real do layout sendo criado e uma barra na parte inferior da página, que possui as funções a serem usadas para criação do layout. Essas funções são:',
+          Text(
+            "O editor de layouts permite a criação de layouts personalizados, através da inserção manual de espaços destinados a imagens "
+            "informando as dimensões desejadas."
+            "\nOs layouts criados podem ser salvos para serem usados novamente em um outro documento futuro."
+            '\n\nO editor de layout consiste na área de exibição em tempo real do layout sendo criado e uma barra inferior, que possui as funções do editor. '
+            'Essas funções são:',
             softWrap: true,
             style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
             textAlign: TextAlign.justify,
@@ -46,10 +43,15 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.add_box_sharp, color: Colors.white,))
             ),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
             Text("ADICIONAR ESPAÇO\nPARA IMAGEM", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
+          ]),
           
-          Text('- Essa função adiciona um espaçamento entre linhas.\n- O espaçamento pode ser alterado durante a edição, para obter diferentes espaçamentos, basta alterá-lo antes de adicionar um novo espaço, mas só será aplicado o espaçamento no momento que for necessário ou solicitado uma quebra de linha.',
+          Text(
+            'Essa função adiciona um espaço destinado a uma imagem, de acordo com a dimensão informada.',
+            
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
           
@@ -60,12 +62,20 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.space_dashboard_sharp, color: Colors.white,))
             ),
-            Text("DEFINIR ESPAÇAMENTO", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
+
+            const Padding(padding: EdgeInsets.only(right: 10)),
+            
+            Text("DEFINIR ESPAÇAMENTO", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
           
-          Text('- Essa função define espaçamentos: Horizontal e Vertical entre um espaço de foto e outro.\n- Os espaçamentos podem ser alterados durante a edição, para obter diferentes espaçamentos, basta alterá-los antes de adicionar um novo espaço.\n- Espaçamento Horizontal não aplicará o espaçamento na esquerda de um espaço caso seja o primeiro da linha, e não aplicará espaçamento na direita caso seja o último da linha.',
+          Text(
+            'Essa função define espaçamentos: Horizontal e Vertical, entre um espaço de foto e outro.'
+            '\nO espaçamento pode ser alterado durante a edição para obter diferentes espaçamentos. Para isso, '
+            'basta alterá-los antes de adicionar um novo espaço.\n(Espaçamento Horizontal não aplicará o espaçamento na esquerda '
+            'de um espaço caso seja o primeiro da linha, também não aplicará espaçamento na direita caso seja o último da linha)',
               style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
             ),
+          
           const Padding(padding: EdgeInsets.all(15)),
           
           Row(children: [
@@ -73,10 +83,15 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_downward_outlined, color: Colors.white,))
             ),
-            Text("IR PARA PRÓXIMA LINHA", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
+            Text("IR PARA PRÓXIMA LINHA", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
           
-          Text('- Essa função faz uma quebra de linha, mesmo que ainda tenha espaços vazios na linha atual para adicionar mais espaços para fotos no layout.\n- A quebra de linha obedece o espaçamento vertical informado.',
+          Text(
+            'Essa função faz uma quebra de linha, mesmo que ainda tenha espaço livre na linha atual.'
+            '\n(A quebra de linha obedece o espaçamento vertical informado)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -87,10 +102,15 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.undo, color: Colors.white,))
             ),
-            Text("DESFAZER UMA AÇÃO", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
+            Text("DESFAZER UMA AÇÃO", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
           ],),
           
-          Text('- Essa função retorna a configuração anterior do layout.',
+          Text(
+            'Essa função retorna a configuração anterior do layout.'
+            '\n(Use com cuidado, pois essa ação é irreversível. Será solicitado antes uma confirmação)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
           
@@ -101,10 +121,14 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.delete_forever_rounded, color: Colors.white,))
             ),
-           Text("LIMPAR TODO DOCUMENTO", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+            
+            Text("LIMPAR TODO DOCUMENTO", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
           
-          Text('- Essa função deleta todas as modificações feitas no layout.\n- Use com cuidado, uma vez deletado, não terá como desfazer a ação.\n- Antes de acionar a função, será solicitado uma confirmação, se realmente deseja deletar tudo.',
+          Text('Essa função deleta todo layout construído.\n(Use com cuidado, uma vez deletado, não terá como desfazer a ação. '
+          'Antes de acionar a função, será solicitado uma confirmação, se realmente deseja deletar tudo)',
               style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -115,8 +139,16 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.save, color: Colors.white,))
             ),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
             Text("SALVAR LAYOUT", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
+          ]),
+
+          Text(
+            'Salva o layout criado na galeria de layouts do aplicativo, para ser utilizado quando desejado para criar novas fotos.',
+              style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
+          ),
 
           const Padding(padding: EdgeInsets.all(30)),
           
@@ -131,9 +163,13 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.home, color: Colors.white,))
             ),
+            
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
             Text("Voltar Para Home", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
-          Text('Permite voltar para a tela inicial do aplicativo. Você deverá confirmar a escolha, caso deseje voltar mesmo.',
+          ]),
+
+          Text('Permite voltar para a tela inicial do aplicativo.\n(Você deverá confirmar a escolha)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -144,9 +180,17 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.arrow_forward_ios_sharp, color: Colors.white,))
             ),
+          
+            const Padding(padding: EdgeInsets.only(right: 10)),
+
             Text("Próxima Página", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
-          Text('Vai para a página de inserção de imagens. Será sempre perguntado se deseja prosseguir com a ação, uma vez que deve-se certificar que o layout foi salvo caso seja de interesse usar novamente essa configuração de layout mais tarde.\nCaso não seja necessário salvar, basta pular para a inserção de imagens.\nEssa opção apenas fica disponível quando há pelo menos um espaço de imagem.',
+          ]),
+          
+          Text(
+            'Vai para a página de inserção de imagens. Será sempre perguntado se deseja prosseguir com a ação, '
+            'uma vez que deve-se certificar que o layout foi salvo caso seja de interesse usar novamente esse '
+            'layout mais tarde.\nCaso não seja necessário salvar, basta pular para a inserção de imagens.'
+            '\n(Essa opção apenas fica disponível quando há pelo menos um espaço de imagem)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -157,9 +201,13 @@ class HelpEditorLayout extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: const Icon(Icons.menu, color: Colors.white),
             ),
-            Text("Configuração da página", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
-          Text('Abre um menú, onde pode ser escolhida a unidade de medida sendo usada no editor, e também é possível ver as configurações do editor e do layout sendo criado',
+           
+            const Padding(padding: EdgeInsets.only(right: 10)),
+            
+            Text("Configuração da página", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
+
+          Text('Abre um menu para configurar a unidade de medida a ser usada no editor. Também é possível ver as especificações do layout.',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -168,8 +216,11 @@ class HelpEditorLayout extends StatelessWidget {
                 Navigator.of(context).pop();
               },
               icon: Text("Voltar para editor", style: TextStyle(fontSize: screenSize.width*0.08, decoration: TextDecoration.underline, color: theme.secondFontColor)),
-          )
-        ],),
+          ),
+
+          const Padding(padding: EdgeInsets.all(30))
+        
+        ]),
     );
   }
 }

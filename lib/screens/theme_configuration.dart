@@ -30,23 +30,25 @@ class _ThemeConfigurationState extends State<ThemeConfiguration> {
       
       body: ListView(children: [
         ListTile(
-          title: Text('Claro (Img Layout)', style: TextStyle(color: theme.fontColor)),
+          title: Text('Claro (Image Layout)', style: TextStyle(color: theme.fontColor)),
           leading: theme.currentTheme == 'claro'? Icon(Icons.radio_button_checked, color: theme.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: theme.lightButtonIconsColor),
           onTap: (){
             setState(() {
               theme.setLightTheme();
             });
-          },
+          }
         ),
+
         ListTile(
-          title: Text('Escuro (Img Layout)', style: TextStyle(color: theme.fontColor)),
+          title: Text('Escuro (Image Layout)', style: TextStyle(color: theme.fontColor)),
           leading: theme.currentTheme == 'escuro'? Icon(Icons.radio_button_checked, color: theme.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: theme.lightButtonIconsColor),
           onTap: (){
             setState(() {
               theme.setDarkTheme();
             });
-          },
+          }
         ),
+        
         ListTile(
           title: Text('Claro (padrão)', style: TextStyle(color: theme.fontColor)),
           leading: theme.currentTheme == 'claropadrao'? Icon(Icons.radio_button_checked, color: theme.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: theme.lightButtonIconsColor),
@@ -54,8 +56,9 @@ class _ThemeConfigurationState extends State<ThemeConfiguration> {
             setState(() {
               theme.setLightThemeDefault();
             });
-          },
+          }
         ),
+
         ListTile(
           title: Text('Escuro (padrão)', style: TextStyle(color: theme.fontColor)),
           leading: theme.currentTheme == 'escuropadrao'? Icon(Icons.radio_button_checked, color: theme.lightButtonIconsColor) : Icon(Icons.radio_button_off, color: theme.lightButtonIconsColor),
@@ -63,7 +66,7 @@ class _ThemeConfigurationState extends State<ThemeConfiguration> {
             setState(() {
               theme.setDarkThemeDefault();
             });
-          },
+          }
         ),
 
         Padding(padding: EdgeInsets.all(screenSize.height*0.03)),

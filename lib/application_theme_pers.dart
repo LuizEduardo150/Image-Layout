@@ -41,10 +41,10 @@ class AppThemePers extends ChangeNotifier{
   }
 
   void setLightThemeDefault(){
-    _bkgColor = const Color.fromRGBO(200, 200, 255, 1);
-    _buttonColor = const Color.fromRGBO(100, 100, 225, 1);
+    _bkgColor = const Color.fromARGB(255, 255, 255, 255);
+    _buttonColor = Colors.blueAccent;
     _fontColor = Colors.black;
-    _buttonIconsColor = const Color.fromRGBO(0, 0, 100, 1);
+    _buttonIconsColor = const Color.fromARGB(255, 9, 9, 45);
     _lightButtonIconsColor = const Color.fromRGBO(0, 0, 200, 1);
     _secondaryFontColor = Colors.black54;
     _currentTheme = 'claropadrao';

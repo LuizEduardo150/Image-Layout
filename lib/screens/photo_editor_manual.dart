@@ -25,17 +25,10 @@ class HelpEditorFotos extends StatelessWidget {
         padding: const EdgeInsets.only(right: 10, left: 10),
         children: [
           
-          Text("\t\t\t\tA função de inserir fotos, permite a inserção de fotos, ocupando os epaços para fotos dos layouts.",
-            softWrap: true,
-            style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
-            textAlign: TextAlign.justify,
-          ),
-          Text('\t\t\t\t O formato do layout usado pode ser os padrões do aplicativo, ou então criados e salvos em seu aparelho.',
-            softWrap: true,
-            style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
-            textAlign: TextAlign.justify,
-          ),
-          Text('\t\t\t\tO preenchimento do documento é feito da esquerda para a direita, do início ao fim, de forma automatica.',
+          Text(
+            "A função de inserir fotos permite a inserção de fotos da galeria, nos epaços livres do layouts."
+            "\nO layout a ser utilizado pode ser criado na hora ou utilizar um já salvo em seu aparelho."
+            "\nO preenchimento do documento é feito da esquerda para a direita, do início ao fim, de forma automatica.",
             softWrap: true,
             style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor),
             textAlign: TextAlign.justify,
@@ -44,14 +37,19 @@ class HelpEditorFotos extends StatelessWidget {
           const Padding(padding: EdgeInsets.all(15)),
 
           Row(children: [
-            Container(height: 35, width: 60,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
-                child: IconButton(onPressed: (){}, icon: const Icon(Icons.space_dashboard_outlined, color: Colors.white,))
+            Container(
+              height: 35, width: 60,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
+              child: IconButton(onPressed: (){}, icon: const Icon(Icons.space_dashboard_outlined, color: Colors.white,))
             ),
-            Text("MUDAR COR DE FUNDO", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
-          Text('Essa função muda a cor de fundo de seu documento em edição.'
-              '\nNote que essa função só fará efeito, caso exista em seu layout, espaços livres, por exemplo nos casos em que há espaçamento entre imagens, ou espaços não aproveitados.',
+
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+            
+            Text("MUDAR COR DE FUNDO", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
+
+          Text('Essa função muda a cor de fundo nos espaçamentos entre uma foto e outra.'
+              '\nNote que essa função só fará efeito caso exista em seu layout espaçamento entre imagens ou borda em todo documento.',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -62,9 +60,13 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.add_photo_alternate, color: Colors.white,))
             ),
+
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+
             Text("ADICIONAR IMAGEM", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
-          Text('- Essa função adiciona uma imagem no espaço atual\n- Quando acabarem os espaços, o botão ficará desabilitado.',
+          ]),
+          
+          Text('Essa função adiciona uma imagem no espaço atual.\n(Quando acabarem os espaços, o botão ficará desabilitado)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -75,9 +77,15 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.format_color_fill_outlined, color: Colors.white,))
             ),
+          
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+
             Text("PINTAR ESPAÇO\nATUAL", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
-          Text('- Essa função permite pular um espaço de imagem, adicionado uma cor sólida no local onde era destinado a uma fotografia.\n-Pode ser colorido usando a cor de fundo atual do documento, ou com uma cor escolhida do mural de cores.',
+          ]),
+
+          Text(
+            'Ocupa um espaço de imagem com apenas uma cor sólida.'
+            '\nPode ser colorido usando a cor de fundo atual do documento ou com uma cor escolhida do mural de cores.',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -88,9 +96,12 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.undo, color: Colors.white,))
             ),
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+
             Text("DESFAZER UMA AÇÃO", style: TextStyle(fontSize: screenSize.width*0.05, color: theme.fontColor)),
-          ],),
-          Text('- Essa função retorna a configuração anterior do documento.',
+          ]),
+          
+          Text('Essa função retorna a configuração anterior do documento.',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -101,9 +112,15 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.delete_forever_rounded, color: Colors.white,))
             ),
-            Text("LIMPAR TODO DOCUMENTO", style: TextStyle(fontSize: screenSize.width*0.04, color: theme.fontColor)),
-          ],),
-          Text('- Essa função deleta todas as imagens inseridas.\n- Use com cuidado, uma vez deletadas, não terá possível desfazer a ação.\n- Antes de acionar a função, será solicitado uma confirmação, se realmente deseja deletar tudo.',
+            
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+
+            Text("LIMPAR TODO DOCUMENTO", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
+
+          Text(
+            'Essa função deleta todas as imagens inseridas.\nUse com cuidado, pois uma vez deletadas, não será possível desfazer essa ação.'
+            '\n(Ao clicar nessa função, será solicitado uma confirmação)',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
 
@@ -114,14 +131,28 @@ class HelpEditorFotos extends StatelessWidget {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: theme.buttonColor),
                 child: IconButton(onPressed: (){}, icon: const Icon(Icons.save, color: Colors.white,))
             ),
+            
+            Padding(padding: EdgeInsetsGeometry.only(right: 10)),
+
             Text("SALVAR IMAGEM\nNA GALERIA", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
           ]),
 
+          Text(
+            'Essa função salva a imagem montada em layout, na galeria do celular.'
+            '\n(É possível continuar editando mesmo após clicar nessa opção)',
+            
+            style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
+          ),
+
+
           const Padding(padding: EdgeInsets.all(30)),
+
           Text('Na parte superior da tela também há botões de opções, e são eles:',
             style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
           ),
+
           const Padding(padding: EdgeInsets.all(15)),
+          
           Row(children: [
             ElevatedButton(
               onPressed: (){},
@@ -132,20 +163,21 @@ class HelpEditorFotos extends StatelessWidget {
                   padding: EdgeInsets.all(screenSize.height*0.01)
               ),
               child: Icon(Icons.menu, size: screenSize.height*0.035)
-
             ),
-            Text("CONFIGURAÇÕES\nDO EDITOR", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
-          ],),
-          Text('\t\tEssa função permite você configurar o comportamento da ferramenta de recorte de imagem no momento em que é escolhida uma imagem da galeria para ser adicionado ao documento.',
-            style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
-          ),
-          Text('\t\tAo abrir o menu de opções, pode-se escolher como a área de seleção do recorte de imagem se comporta na opção: “Proporção do recorte”, podendo assumir os valores: “Travada” e “Livre”. Você poderá entender melhor o comportamento das mudanças no menu de informação da página de configuração.',
-            style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
-          ),
-          Text('\t\tA outra opção é referente a qualidade da imagem que vai ser aberta da galeria para ser adicionada ao documento. Lembrando que quanto maior a qualidade escolhida, maior pode ser o uso dos recursos de seu aparelho.',
-            style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
-          ),
+            
+            Padding(padding: EdgeInsets.only(right: 10)),
 
+            Text("CONFIGURAÇÕES\nDO EDITOR", style: TextStyle(fontSize: screenSize.width*0.06, color: theme.fontColor)),
+          ]),
+          
+          Text(
+            'Essa função permite você configurar o comportamento da ferramenta de recorte de imagem.'
+            '\nPode ser definido se o recorte da imagem possui proporção “Travada” ou “Livre”.'
+            '\nA outra opção é a qualidade da imagem a ser adicionada no documento.'
+            '\n(Lembre que quanto maior a qualidade escolhida, maior será o uso dos recursos de seu aparelho.',
+            style: TextStyle(color: theme.fontColor, fontSize: screenSize.width*0.06),
+          ),
+          
           const Padding(padding: EdgeInsets.all(30)),
 
           IconButton(
@@ -158,7 +190,10 @@ class HelpEditorFotos extends StatelessWidget {
                 color: theme.secondFontColor,
               )
             )
-          )
+          ),
+
+          const Padding(padding: EdgeInsets.all(30)),
+
         ])
     );
   }
