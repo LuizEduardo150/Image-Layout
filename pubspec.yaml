@@ -31,7 +31,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
   image: ^4.10.1
   image_cropper: ^12.2.1 # need manifest
   image_picker: ^1.2.4
