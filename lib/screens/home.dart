@@ -77,7 +77,7 @@ class _HomeState extends State<Home> {
             },
             title: Column(children: [
                   Icon(Icons.format_paint, color: theme.iconsColor, size: 50,),
-                  Text("Mudar o theme da aplicação", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold),)
+                  Text("Mudar o tema da aplicação", style: TextStyle(color: theme.fontColor, fontSize: 20, fontWeight: FontWeight.bold),)
             ],),
           ),
 
@@ -128,8 +128,8 @@ class _HomeState extends State<Home> {
             Text("Construa diversas configurações de layout para criar suas fotos",
                 style: TextStyle(
                   color: theme.fontColor,
-                  fontSize: telaTamanho.width*0.06,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic
                 )
             ),
 
@@ -180,7 +180,7 @@ class _HomeState extends State<Home> {
                       Icon(Icons.space_dashboard_outlined, size: telaTamanho.width*0.22, color: theme.iconsColor,)
                     ],
                   ),
-                  const Text('Editar com layouts existentes',textAlign: TextAlign.center,
+                  const Text('Editar com layout salvo',textAlign: TextAlign.center,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20
