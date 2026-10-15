@@ -1,4 +1,4 @@
-# image_layout (BR)
+# image_layout (PT-BR)
 Aplicativo para Android utilizando o framework Flutter, para criação de layouts
 de fotos personalizadas. Esse programa foi desenvolvido como um trabalho de faculdade
 e continuado a fim de resolver uma necessidade pessoal.
@@ -22,7 +22,7 @@ A criação do layout é feita adicionando espaços destinados a imagens em um d
 
 ```
 
-# image_layout (US)
+# image_layout (Eng.)
 
 An Android application built using the Flutter framework, designed for creating custom photo layouts. This program originated as a college project and was further developed to address a personal need.
 
@@ -55,7 +55,7 @@ Layouts are created by adding image placeholders to a blank document. These plac
 
 >> Dependencies (dependências):
  - image: ^4.10.1
- - image_cropper: ^12.2.1 # need manifest
+ - image_cropper: ^12.2.1
  - image_picker: ^1.2.4
  - shared_preferences: ^2.5.6
  - provider: ^6.1.5+1
@@ -63,7 +63,7 @@ Layouts are created by adding image placeholders to a blank document. These plac
  - saver_gallery: ^5.0.0
  - path_provider: ^2.1.6
  - flex_color_picker: ^4.0.0
- - permission_handler: ^13.0.2 # need gradle.properties and android/app/build.gradle
+ - permission_handler: ^13.0.2
  - device_info_plus: ^13.3.0
  - material_ui: ^1.6.0
 
