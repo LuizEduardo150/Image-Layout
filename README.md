@@ -6,6 +6,8 @@ e continuado a fim de resolver uma necessidade pessoal.
 Esse aplicativo resolve problemas relacionados a impressão de fotos em uma mesma folha, as soluções atuais  disponibilizam layouts predefinidos para inserir as imagens em documento único, que podem não ter o layout com a quantidade de espaços desejado, além de não permitirem o recorte das imagens inseridas. Dado esse problema, foi desenvolvido esse aplicativo, permitindo criar um layout para gerar um documento único com várias fotos, e reutilizar esse layout sempre que desejado, salvando-o na galeria de layouts do app.
 
 A criação do layout é feita adicionando espaços destinados a imagens em um documento vazio. A inserção é feita sempre com espaços retangulares com dimensões informadas pelo usuário, são inseridos sempre de cima para baixo, da esquerda para direita. O primeiro espaço de imagem de uma linha define a altura recomendada para a linha em questão. Adicionar espaços de imagens com altura inferior pode ser usado para gerar uma linha delimitada por uma imagem grande, e outras menores ocupando a mesma coluna, como no exemplo abaixo.
+ 
+```
  _____________________________ 
 |        |          |         |	      
 |        |     2    |         |       
@@ -18,6 +20,7 @@ A criação do layout é feita adicionando espaços destinados a imagens em um d
 |        |     7    |    9    |
  --------|----------|--------- 
 
+```
 
 # image_layout (US)
 
@@ -26,6 +29,8 @@ An Android application built using the Flutter framework, designed for creating 
 The application solves issues related to printing multiple photos on a single sheet. Existing solutions typically offer only predefined layouts, which may not provide the desired number of slots and often lack the ability to crop the images being added. To overcome these limitations, this application was developed; it allows users to create custom layouts—generating a single document containing multiple photos—and save these layouts within the app’s gallery for future reuse.
 
 Layouts are created by adding image placeholders to a blank document. These placeholders are rectangular, with dimensions specified by the user, and are added sequentially from top to bottom, left to right. The first image placeholder in a row determines the recommended height for that row. It is possible to add placeholders with a smaller height, allowing for a layout where a larger image defines the row, while smaller images occupy the same vertical space—as shown in the example below.
+
+``` 
  _____________________________ 
 |        |          |         |	      
 |        |     2    |         |       
@@ -38,6 +43,7 @@ Layouts are created by adding image placeholders to a blank document. These plac
 |        |     7    |    9    |
  --------|----------|--------- 
 
+```
 
 ## Informações / Information
 
